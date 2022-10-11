@@ -40,7 +40,10 @@ public class SimpleClientApp {
 					+"1 is used to wipe repo and file list\n"
 					+"2 is used to register a file\n" 
 					+"3 is used to create dfs for all the files in file list\n"
+<<<<<<< HEAD
 					+"4 is used to list all the dfs in the repo\n"
+=======
+>>>>>>> e96841040cee99bd5f20fba0421db1e8fdd9815a
 					+"0 is used to exit");
 			int code = scanner.nextInt();
 			//wipe all the contents of the Repo file and file list.
@@ -87,6 +90,7 @@ public class SimpleClientApp {
 				String queryExpression = qrMan.createQueryExpression();
 				spark.sql(queryExpression).show((int)df.count(),false);
 			}
+<<<<<<< HEAD
 			else if(code == 4) {
 				List<StructuredFile> fileList = schMan.getFileList();
 				System.out.println("------------------------------------");
@@ -95,6 +99,8 @@ public class SimpleClientApp {
 				}
 				System.out.println("------------------------------------");
 			}
+=======
+>>>>>>> e96841040cee99bd5f20fba0421db1e8fdd9815a
 			//end the loop
 			else if(code == 0) {
 				scanner.close();

@@ -1,0 +1,2 @@
+src/main/resources/joomlatools__joomla-platform-categories.tsv
+src/main/resources/try.tsv
