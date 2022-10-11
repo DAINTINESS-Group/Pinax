@@ -12,49 +12,49 @@ public class QueryManager {
 		int queryCreator = 1;
 		String queryExpression = "";
 		try {
-		System.out.println("Type one of the above names to choose the table you want to get data from");
-		String sfAlias = scanner.next();
-		System.out.println("Type what you would like the query to do");
-		String queryType = scanner.next();
-		queryExpression += queryType + " from global_temp."+ sfAlias;
-		System.out.println("Type an acronym for the table. Use it in case the files have common column names");
-		String acronym = scanner.next();
-		queryExpression += " " + "as " + acronym;
-		System.out.println("If you would like to join another table type 0");
-		Integer joiner = scanner.nextInt();
-		if(joiner == 0) {
-			queryExpression += createSqlJoinedTable(scanner);
-			System.out.println("If you want to join another table type 0");
-			queryCreator = scanner.nextInt();
-			while(queryCreator == 0) {
+			System.out.println("Type one of the above names to choose the table you want to get data from");
+			String sfAlias = scanner.next();
+			System.out.println("Type what you would like the query to do");
+			String queryType = scanner.next();
+			queryExpression += queryType + " from global_temp."+ sfAlias;
+			System.out.println("Type an acronym for the table. Use it in case the files have common column names");
+			String acronym = scanner.next();
+			queryExpression += " " + "as " + acronym;
+			System.out.println("If you would like to join another table type 0");
+			Integer joiner = scanner.nextInt();
+			if(joiner == 0) {
 				queryExpression += createSqlJoinedTable(scanner);
-				System.out.println("If you want to add another parameter type 0, else type any int to stop");
+				System.out.println("If you want to join another table type 0");
 				queryCreator = scanner.nextInt();
+				while(queryCreator == 0) {
+					queryExpression += createSqlJoinedTable(scanner);
+					System.out.println("If you want to add another parameter type 0, else type any int to stop");
+					queryCreator = scanner.nextInt();
+				}
 			}
-		}
-		System.out.println("Do you want to add more parameters to the query? If so type 0 ");
-		Integer paramFlag = scanner.nextInt();
-		if(paramFlag == 0) {
-			queryExpression += " where ";
-			queryExpression += createSQLParameters(scanner);
-			System.out.println("If you want to add another parameter type 0, else type any int to stop");
-			queryCreator = scanner.nextInt();
-			while(queryCreator == 0) {
-				System.out.println("Type the logical operator you want to use (and,or,...)");
-				queryExpression += scanner.next() + " ";
+			System.out.println("Do you want to add more parameters to the query? If so type 0 ");
+			Integer paramFlag = scanner.nextInt();
+			if(paramFlag == 0) {
+				queryExpression += " where ";
 				queryExpression += createSQLParameters(scanner);
 				System.out.println("If you want to add another parameter type 0, else type any int to stop");
 				queryCreator = scanner.nextInt();
+				while(queryCreator == 0) {
+					System.out.println("Type the logical operator you want to use (and,or,...)");
+					queryExpression += scanner.next() + " ";
+					queryExpression += createSQLParameters(scanner);
+					System.out.println("If you want to add another parameter type 0, else type any int to stop");
+					queryCreator = scanner.nextInt();
+				}
+				System.out.println("If you want to groupby or orderby or something type 0, else type any int");
+				Integer flag2 = scanner.nextInt();
+				if(flag2 == 0) {
+					System.out.println("Add Statement");
+					queryExpression += " " + scanner.next() + " ";
+					System.out.println("Chose column to do the statement for");
+					queryExpression += scanner.next();
+				}
 			}
-			System.out.println("If you want to groupby or orderby or something type 0, else type any int");
-			Integer flag2 = scanner.nextInt();
-			if(flag2 == 0) {
-				System.out.println("Add Statement");
-				queryExpression += " " + scanner.next() + " ";
-				System.out.println("Chose column to do the statement for");
-				queryExpression += scanner.next();
-			}
-		}
 		}
 		catch (Exception e) {
 			System.out.println("You did not input the proper data type! Please reconstruct the query");
