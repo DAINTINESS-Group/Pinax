@@ -22,15 +22,10 @@ public class QueryManager {
 			queryExpression += " " + "as " + acronym;
 			System.out.println("If you would like to join another table type 0");
 			Integer joiner = scanner.nextInt();
-			if(joiner == 0) {
+			while(joiner == 0) {
 				queryExpression += createSqlJoinedTable(scanner);
 				System.out.println("If you want to join another table type 0");
-				queryCreator = scanner.nextInt();
-				while(queryCreator == 0) {
-					queryExpression += createSqlJoinedTable(scanner);
-					System.out.println("If you want to add another parameter type 0, else type any int to stop");
-					queryCreator = scanner.nextInt();
-				}
+				joiner = scanner.nextInt();
 			}
 			System.out.println("Do you want to add more parameters to the query? If so type 0 ");
 			Integer paramFlag = scanner.nextInt();
