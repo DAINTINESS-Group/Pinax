@@ -95,7 +95,6 @@ public class SimpleClientApp {
 				}
 				System.out.println("------------------------------------");
 			}
-			//end the loop
 			else if(code == 0) {
 				scanner.close();
 				stopFlag = true;
@@ -107,7 +106,5 @@ public class SimpleClientApp {
 		//try some stuff to see if it works
 		spark.stop();
 		System.out.println("You exited the program");
-		//etc.
-		
-	}//end main
-}//end class
+	}
+}

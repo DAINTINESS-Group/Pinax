@@ -1,6 +1,4 @@
 RegisteredFileAlias	Path	Type
 try	src\main\resources\try.tsv	tsv
-<<<<<<< HEAD
 person	src\main\resources\person.tsv	tsv
-=======
->>>>>>> e96841040cee99bd5f20fba0421db1e8fdd9815a
+more_stats	src\main\resources\more_stats.tsv	tsv
