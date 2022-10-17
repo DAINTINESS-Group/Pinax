@@ -9,7 +9,6 @@ public class QueryManager {
 		@SuppressWarnings("resource")
 		Scanner scanner = new Scanner(System.in);
 		scanner.useDelimiter(System.getProperty("line.separator"));
-		int queryCreator = 1;
 		String queryExpression = "";
 		try {
 			System.out.println("Type one of the above names to choose the table you want to get data from");
@@ -31,15 +30,12 @@ public class QueryManager {
 			Integer paramFlag = scanner.nextInt();
 			if(paramFlag == 0) {
 				queryExpression += " where ";
-				queryExpression += createSQLParameters(scanner);
-				System.out.println("If you want to add another parameter type 0, else type any int to stop");
-				queryCreator = scanner.nextInt();
-				while(queryCreator == 0) {
+				while(paramFlag == 0) {
 					System.out.println("Type the logical operator you want to use (and,or,...)");
 					queryExpression += scanner.next() + " ";
 					queryExpression += createSQLParameters(scanner);
 					System.out.println("If you want to add another parameter type 0, else type any int to stop");
-					queryCreator = scanner.nextInt();
+					paramFlag = scanner.nextInt();
 				}
 				System.out.println("If you want to groupby or orderby or something type 0, else type any int");
 				Integer flag2 = scanner.nextInt();
