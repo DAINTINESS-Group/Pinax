@@ -15,11 +15,17 @@ import org.apache.log4j.Logger;
 
 import com.opencsv.exceptions.CsvException;
 
-import engine.SchemaManager;
+import engine.SchemaManagerInterface;
+import engine.SchemaManagerFactory;
 import model.StructuredFile;
 import querymanager.QueryManager;
 
 public class SimpleClientApp {
+	
+	
+	// WE DONOT WANT A MAIN WITH INTERACTION. WILL HAVE A GUI FOR THIS
+	//FOR THE MOMENT WE NEED A SIMPLE CLIENT THAT MAKES BACK-END CALLS VIA THE INTERFACES
+	//KIND-LIKE-A TEST
 	public static void main(String[] args) throws AnalysisException, IOException, CsvException {
 		SparkSession spark = SparkSession
 				.builder()
@@ -29,7 +35,8 @@ public class SimpleClientApp {
 		Logger rootLogger = Logger.getRootLogger(); //remove the messages of spark
 		rootLogger.setLevel(Level.ERROR);
 		
-		SchemaManager schMan = new SchemaManager();
+		SchemaManagerInterface schMan = new SchemaManagerFactory().createSchemaManager();
+		
 		QueryManager qrMan = new QueryManager();
 		boolean stopFlag = false;
 		Scanner scanner = new Scanner(System.in);

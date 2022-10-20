@@ -24,7 +24,7 @@ import model.StructuredFile;
  * @author pvassil
  *
  */
-public class SchemaManager implements SchemaManagerInterface{
+class SchemaManager implements SchemaManagerInterface{
 	private static final String _REGISTERED_FILE_REPO = "src/main/resources/_REPO/RegisteredFiles.tsv";
 	
 	/**
