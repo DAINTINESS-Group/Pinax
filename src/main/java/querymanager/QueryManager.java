@@ -1,32 +1,31 @@
 package querymanager;
 
 import java.util.List;
-import java.util.Scanner;
 
 //MUST DO THE TRICK WITH I-FACE AND FACTORY HERE TOO
 //MUST DECIDE WHAT THE QMgr DOES
 //MUST REMOVE *** ALL *** FORMS OF INTERACTION
 
-public class QueryManager {
+public class QueryManager implements QueryManagerInterface{
 	
 	//MUST MAKE TESTS TO TEST ME
 	public String createNaiveQueryExpression(String table) {
-		return "SELECT * FROM " + table;
+		return "SELECT * FROM global_temp." + table;
 	}
 	
 	//MUST MAKE TESTS TO TEST ME
 	public String createProjectionOnlyQueryExpression(String table, List<String> attributeNames) {
-		return "SELECT " + attributeNames.toString() + " FROM " + table;
+		return "SELECT " + attributeNames.toString() + " FROM global_temp." + table;
 	}
 	
 	//MUST MAKE TESTS TO TEST ME
 	public String createProjectSelectSingleTableQueryExpression(String table, String tableAlias, List<String> attributeNames, String filters) {
 		return "SELECT " + attributeNames.toString()
-			+ "FROM " + table + " as " + tableAlias
+			+ "FROM global_temp." + table + " as " + tableAlias
 			+ "WHERE " + filters;
 	}
 	
-	public String createQueryExpression() {
+	/*public String createQueryExpression() {
 		
 		Scanner scanner = new Scanner(System.in);
 		scanner.useDelimiter(System.getProperty("line.separator"));
@@ -90,5 +89,5 @@ public class QueryManager {
 		System.out.println("Type the expression you want to add. In case you want to compare with a string include it in '' ");
 		String queryExpression = scanner.next();
 		return queryExpression;
-	}
+	}*/
 }

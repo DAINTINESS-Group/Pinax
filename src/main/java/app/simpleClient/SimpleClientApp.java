@@ -19,6 +19,8 @@ import engine.SchemaManagerInterface;
 import engine.SchemaManagerFactory;
 import model.StructuredFile;
 import querymanager.QueryManager;
+import querymanager.QueryManagerFactory;
+import querymanager.QueryManagerInterface;
 
 public class SimpleClientApp {
 	
@@ -36,13 +38,31 @@ public class SimpleClientApp {
 		rootLogger.setLevel(Level.ERROR);
 		
 		SchemaManagerInterface schMan = new SchemaManagerFactory().createSchemaManager();
-		
-		QueryManager qrMan = new QueryManager();
-		boolean stopFlag = false;
-		Scanner scanner = new Scanner(System.in);
-		int counter = 0;
+		QueryManagerInterface qrMan = new QueryManagerFactory().createQueryManager();
+	
 		Dataset<Row> df = null;
-		while(stopFlag == false) {
+		
+		schMan.wipeRepoFile();
+		schMan.wipeFileList();
+		Path path = Paths.get("src/main/resources/more_stats.tsv");
+		String fileAlias = schMan.createFileAlias(path.getFileName().toString());
+		String fileType = schMan.getFileType(path.getFileName().toString());
+		schMan.registerFileAsDataSource(fileAlias, path, fileType);
+		
+		List<StructuredFile> fileList = schMan.getFileList();
+		for(StructuredFile sf: fileList) {
+			if(sf.getSfType().equals("tsv")) {
+				System.out.println("------------------------------------");
+				df = spark.read().option("delimiter", "\t").option("header", "true").option("inferSchema","true").csv(sf.getSfPath().toRealPath().toString());
+				df.createGlobalTempView(sf.getSfAlias());
+				System.out.println(sf.getSfAlias());
+				System.out.println("------------------------------------");
+			}
+		}
+		
+		String queryExpression = qrMan.createNaiveQueryExpression("more_stats");
+		spark.sql(queryExpression).show((int)df.count(),false);
+		/*while(stopFlag == false) {
 			System.out.println("give an integer to do someting.\n"
 					+"1 is used to wipe repo and file list\n"
 					+"2 is used to register a file\n" 
@@ -106,7 +126,7 @@ public class SimpleClientApp {
 				scanner.close();
 				stopFlag = true;
 			}
-		}
+		}*/
 		//Dataset<Row> df = spark.read().option("delimiter", "\t").option("header", "true").option("inferSchema","true").csv(path.toRealPath().toString());
 		//df = spark.read().option("delimiter", ",").option("header", "true").option("inferSchema","true").csv();
 		//ignore any front-end mambo jumbo. do it programmatically in the client.

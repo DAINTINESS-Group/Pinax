@@ -1,4 +1,2 @@
 RegisteredFileAlias	Path	Type
-try	src\main\resources\try.tsv	tsv
-person	src\main\resources\person.tsv	tsv
 more_stats	src\main\resources\more_stats.tsv	tsv
