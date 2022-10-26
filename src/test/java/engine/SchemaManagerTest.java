@@ -102,7 +102,6 @@ class SchemaManagerTest {
 			assertEquals(expectedAlias, alias);
 			assertEquals(path, testFile.getSfPath());
 			assertEquals(expectedType, testFile.getSfType());
-			//COMPLETE WITH MORE CHECKS
 			
 			StructuredFile sfTest = schemaMgr.getFileByAliasName(alias);
 			assertNotEquals(null,sfTest);
@@ -116,7 +115,6 @@ class SchemaManagerTest {
 			assertNotEquals(beforeRepoContents,afterRepoContents);
 		} catch (IOException e) {
 			fail("Registration did not finish properly");
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -126,7 +124,6 @@ class SchemaManagerTest {
 			assertNotEquals(0,updatedFileListSize); //check if after the registration the update method works
 		} catch (IOException e1) {
 			fail("Could not update file list");
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 

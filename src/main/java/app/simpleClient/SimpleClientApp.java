@@ -3,8 +3,8 @@ package app.simpleClient;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 import org.apache.spark.sql.AnalysisException;
 import org.apache.spark.sql.Dataset;
@@ -18,7 +18,6 @@ import com.opencsv.exceptions.CsvException;
 import engine.SchemaManagerInterface;
 import engine.SchemaManagerFactory;
 import model.StructuredFile;
-import querymanager.QueryManager;
 import querymanager.QueryManagerFactory;
 import querymanager.QueryManagerInterface;
 
@@ -44,24 +43,55 @@ public class SimpleClientApp {
 		
 		schMan.wipeRepoFile();
 		schMan.wipeFileList();
-		Path path = Paths.get("src/main/resources/more_stats.tsv");
-		String fileAlias = schMan.createFileAlias(path.getFileName().toString());
-		String fileType = schMan.getFileType(path.getFileName().toString());
-		schMan.registerFileAsDataSource(fileAlias, path, fileType);
+		
+		String[] filePaths = {"src/main/resources/more_stats.tsv",
+								"src/main/resources/try.tsv", 
+								"src/main/resources/person.tsv", 
+								"src/main/resources/joomlatools__joomla-platform-categories.tsv"};
+		for(String s: filePaths) {
+			Path path = Paths.get(s);
+			String fileAlias = schMan.createFileAlias(path.getFileName().toString());
+			String fileType = schMan.getFileType(path.getFileName().toString());
+			schMan.registerFileAsDataSource(fileAlias, path, fileType);
+		}
 		
 		List<StructuredFile> fileList = schMan.getFileList();
+		System.out.println("------------------------------------");
 		for(StructuredFile sf: fileList) {
 			if(sf.getSfType().equals("tsv")) {
-				System.out.println("------------------------------------");
 				df = spark.read().option("delimiter", "\t").option("header", "true").option("inferSchema","true").csv(sf.getSfPath().toRealPath().toString());
 				df.createGlobalTempView(sf.getSfAlias());
 				System.out.println(sf.getSfAlias());
-				System.out.println("------------------------------------");
+			}
+			else if(sf.getSfType().equals("csv")) {
+				df = spark.read().option("delimiter", ",").option("header", "true").option("inferSchema","true").csv(sf.getSfPath().toRealPath().toString());
+				df.createGlobalTempView(sf.getSfAlias());
+				System.out.println(sf.getSfAlias());
 			}
 		}
+		System.out.println("------------------------------------");
+	
+		String naiveQueryExpression = qrMan.createNaiveQueryExpression("more_stats");
+		spark.sql(naiveQueryExpression).show((int)df.count(),false);
 		
-		String queryExpression = qrMan.createNaiveQueryExpression("more_stats");
-		spark.sql(queryExpression).show((int)df.count(),false);
+		List<String> listOfAttributes = new ArrayList<String>();
+		listOfAttributes.add("first_name");
+		listOfAttributes.add("last_name");
+		listOfAttributes.add("day");
+		String projectionOnlyQueryExpression = qrMan.createProjectionOnlyQueryExpression("more_stats", listOfAttributes);
+		spark.sql(projectionOnlyQueryExpression).show((int)df.count(),false);
+		
+		List<String> anotherListOfAttributes = new ArrayList<String>();
+		anotherListOfAttributes.add("first_name");
+		anotherListOfAttributes.add("last_name");
+		anotherListOfAttributes.add("day");
+		String filters = " stats.last_name = 'kon' and first_name = 'stelios'";
+		String projectSelectSingleTableQueryExpression = qrMan.createProjectSelectSingleTableQueryExpression("more_stats", "stats", anotherListOfAttributes, filters);
+		System.out.println(projectSelectSingleTableQueryExpression);
+		spark.sql(projectSelectSingleTableQueryExpression).show((int)df.count(),false);
+		
+		
+		
 		/*while(stopFlag == false) {
 			System.out.println("give an integer to do someting.\n"
 					+"1 is used to wipe repo and file list\n"

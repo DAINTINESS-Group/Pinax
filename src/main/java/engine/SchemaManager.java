@@ -90,7 +90,7 @@ class SchemaManager implements SchemaManagerInterface{
 				fileColumns.add(tempColumn);
 			}
 		}
-			return fileColumns;
+		return fileColumns;
 	}
 	
 	/**
@@ -139,7 +139,6 @@ class SchemaManager implements SchemaManagerInterface{
 		//add path to the this.FileList
 		//write its info in the _REGISTERED_FILE_REPO
 		try {
-			
 			List<FileColumn> columnList = getColumns(path.toString());
 			StructuredFile structFileItem = new StructuredFile(fileAlias,path,columnList,fileType);
 			fileList.add(structFileItem);
