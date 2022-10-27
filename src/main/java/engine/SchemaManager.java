@@ -48,7 +48,7 @@ class SchemaManager implements SchemaManagerInterface{
 	 * 
 	 * @return the size of the fileList
 	 */
-	public int wipeFileList(){
+	public int wipeFileList() {
 		fileList.clear();
 		return fileList.size();
 	}
@@ -99,7 +99,7 @@ class SchemaManager implements SchemaManagerInterface{
 	 * @return
 	 * @throws IOException
 	 */
-	public int updateFileList() throws IOException{
+	public int updateFileList() throws IOException {
 		List<String[]> fileContents = getRepoFileContents();
 		fileContents = fileContents.subList(1,fileContents.size());
 		for(String[] content : fileContents) {
@@ -121,7 +121,7 @@ class SchemaManager implements SchemaManagerInterface{
 	 * @return 0 if all is OK; negative numbers depending on the problems encountered
 	 * @throws IOException 
 	 */
-	public int registerFileAsDataSource(String fileAlias, Path path, String fileType){
+	public int registerFileAsDataSource(String fileAlias, Path path, String fileType) {
 		//TODO complete the code
 		//check if the alias is used already
 		for(StructuredFile iter: fileList) {
@@ -162,7 +162,7 @@ class SchemaManager implements SchemaManagerInterface{
 	 * @throws CsvException 
 	 * @throws IOException 
 	 */
-	public StructuredFile getFileByAliasName(String pAlias){
+	public StructuredFile getFileByAliasName(String pAlias) {
 		for(StructuredFile sf: fileList) {
 			if(sf.getSfAlias().equals(pAlias)) {
 				return sf;
@@ -175,7 +175,7 @@ class SchemaManager implements SchemaManagerInterface{
 	/**
 	 * Clears the contents of the Repo file.
 	 */
-	public long wipeRepoFile() throws IOException{
+	public long wipeRepoFile() throws IOException {
 		File repoFile = new File(_REGISTERED_FILE_REPO);
 		
 		FileWriter outputfile = new FileWriter(repoFile,false);

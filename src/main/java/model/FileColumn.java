@@ -1,5 +1,7 @@
 package model;
 
+import java.util.Objects;
+
 public class FileColumn {
 	private String name;
 	private String dataType;
@@ -7,8 +9,8 @@ public class FileColumn {
 
 	public FileColumn(String name, String dataType, int position) {
 		super();
-		this.name = name;
-		this.dataType = dataType;
+		this.name = Objects.requireNonNull(name, "name must not be null");
+		this.dataType = Objects.requireNonNull(dataType, "dataType must not be null");
 		this.position = position;
 	}
 

@@ -2,6 +2,7 @@ package model;
 
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Objects;
 import java.util.HashMap;
 
 /**
@@ -45,10 +46,10 @@ public class StructuredFile {
 	 */
 	public StructuredFile(String sfAlias, Path sfPath, List<FileColumn> sfColumns,String type) {
 		super();
-		this.sfAlias = sfAlias;
-		this.sfPath = sfPath;
-		this.sfColumns = sfColumns;
-		this.type = type;
+		this.sfAlias = Objects.requireNonNull(sfAlias, "sfAlias must not be null");
+		this.sfPath = Objects.requireNonNull(sfPath, "sfPath must not be null");
+		this.sfColumns = Objects.requireNonNull(sfColumns, "sfColumns must not be null");
+		this.type = Objects.requireNonNull(type, "type must not be null");
 		
 		this.sfColumnMap = new HashMap<String, FileColumn>();
 		for(FileColumn fc: this.sfColumns) {
