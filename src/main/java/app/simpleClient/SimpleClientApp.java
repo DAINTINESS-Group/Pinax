@@ -90,6 +90,29 @@ public class SimpleClientApp {
 		System.out.println(projectSelectSingleTableQueryExpression);
 		spark.sql(projectSelectSingleTableQueryExpression).show((int)df.count(),false);
 		
+		
+		String primaryTable = "more_stats";
+		List<String> joinTables = new ArrayList<String>();
+		joinTables.add("person");
+		List<String> tableAliases = new ArrayList<String>();
+		tableAliases.add("m");
+		tableAliases.add("p");
+		List<String> attributeNames = new ArrayList<String>();
+		attributeNames.add("p.first_name");
+		attributeNames.add("p.last_name");
+		attributeNames.add("day");
+		attributeNames.add("m.first_name");
+		attributeNames.add("m.last_name");
+		List<String> joinFilters = new ArrayList<String>();
+		joinFilters.add("p.ip_address = m.ip_address");
+		List<String> joinTypes = new ArrayList<String>();
+		joinTypes.add("LEFT");
+		String whereFilter = "p.gender = 'Male'";
+		
+		String multiTableQueryExpression = qrMan.createMultiTableQueryExpression(primaryTable,joinTables,tableAliases,attributeNames,joinFilters,joinTypes,whereFilter);
+		System.out.println(multiTableQueryExpression);
+		spark.sql(multiTableQueryExpression).show((int)df.count(),false);
+		
 		//Dataset<Row> df = spark.read().option("delimiter", "\t").option("header", "true").option("inferSchema","true").csv(path.toRealPath().toString());
 		//df = spark.read().option("delimiter", ",").option("header", "true").option("inferSchema","true").csv();
 		//ignore any front-end mambo jumbo. do it programmatically in the client.

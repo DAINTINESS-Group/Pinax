@@ -29,6 +29,27 @@ class QueryManagerTest {
 		String filter = "Month > 3 and Month < 12";
 		String testSingleQuery = qrMan.createProjectSelectSingleTableQueryExpression("table", "t", singleAttributes, filter); //case sensitive
 		assertEquals(testSingleQuery,expectedSingleQuery);
+		
+		String expectedMultiTableQuery = "SELECT p.first_name, p.last_name, day, m.first_name, m.last_name FROM global_temp.more_stats AS m LEFT JOIN global_temp.person AS p ON p.ip_address = m.ip_address WHERE p.gender = 'Male'";
+		String primaryTable = "more_stats";
+		List<String> joinTables = new ArrayList<String>();
+		joinTables.add("person");
+		List<String> tableAliases = new ArrayList<String>();
+		tableAliases.add("m");
+		tableAliases.add("p");
+		List<String> attributeNames = new ArrayList<String>();
+		attributeNames.add("p.first_name");
+		attributeNames.add("p.last_name");
+		attributeNames.add("day");
+		attributeNames.add("m.first_name");
+		attributeNames.add("m.last_name");
+		List<String> joinFilters = new ArrayList<String>();
+		joinFilters.add("p.ip_address = m.ip_address");
+		List<String> joinTypes = new ArrayList<String>();
+		joinTypes.add("LEFT");
+		String whereFilter = "p.gender = 'Male'";
+		String multiTableQueryExpression = qrMan.createMultiTableQueryExpression(primaryTable,joinTables,tableAliases,attributeNames,joinFilters,joinTypes,whereFilter);
+		assertEquals(multiTableQueryExpression,expectedMultiTableQuery);
 
 	}
 
