@@ -32,9 +32,12 @@ public class QueryManager implements QueryManagerInterface{
 				+ " FROM global_temp." + primaryTable + " AS " + tableAliases.get(0);
 		tableAliases.remove(0);
 		for(int i=0;i<joinTypes.size();i++) {
-			query += " " + joinTypes.get(i) + " JOIN global_temp." + joinTables.get(i) + " AS " + tableAliases.get(i) + " ON " + joinFilters.get(i);
+			query += " " + joinTypes.get(i) + " JOIN global_temp." + joinTables.get(i) + " AS " + tableAliases.get(i);
+			if(joinFilters.get(i) != null && !joinFilters.get(i).trim().isEmpty()) {
+				query += " ON " + joinFilters.get(i);
+			}
 		}
-		if(whereFilter.length() > 1) {
+		if(whereFilter != null && !whereFilter.trim().isEmpty()) {
 			query += " WHERE " + whereFilter;
 		}
 		return query;
