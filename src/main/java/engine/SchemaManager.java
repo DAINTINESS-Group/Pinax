@@ -53,6 +53,10 @@ class SchemaManager implements SchemaManagerInterface{
 		return fileList.size();
 	}
 	
+	/**
+	 * Creates the alias that is used in the registration of the file
+	 * 
+	 */
 	public String createFileAlias(String s) {
 		File filePath = new File(s);
 		String name = filePath.getName();
@@ -61,6 +65,10 @@ class SchemaManager implements SchemaManagerInterface{
 		return name;
 	}
 	
+	/**
+	 * Gets the file type.
+	 * 
+	 */
 	public String getFileType(String s) {
 		File filePath = new File(s);
 		String type = filePath.getName();
