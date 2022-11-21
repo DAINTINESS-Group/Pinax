@@ -32,24 +32,50 @@ class QueryManagerTest {
 		
 		String expectedMultiTableQuery = "SELECT p.first_name, p.last_name, day, m.first_name, m.last_name FROM global_temp.more_stats AS m LEFT JOIN global_temp.person AS p ON p.ip_address = m.ip_address WHERE p.gender = 'Male'";
 		String primaryTable = "more_stats";
-		List<String> joinTables = new ArrayList<String>();
+		ArrayList<String> joinTables = new ArrayList<String>();
 		joinTables.add("person");
-		List<String> tableAliases = new ArrayList<String>();
+		ArrayList<String> tableAliases = new ArrayList<String>();
 		tableAliases.add("m");
 		tableAliases.add("p");
-		List<String> attributeNames = new ArrayList<String>();
+		ArrayList<String> attributeNames = new ArrayList<String>();
 		attributeNames.add("p.first_name");
 		attributeNames.add("p.last_name");
 		attributeNames.add("day");
 		attributeNames.add("m.first_name");
 		attributeNames.add("m.last_name");
-		List<String> joinFilters = new ArrayList<String>();
+		ArrayList<String> joinFilters = new ArrayList<String>();
 		joinFilters.add("p.ip_address = m.ip_address");
-		List<String> joinTypes = new ArrayList<String>();
+		ArrayList<String> joinTypes = new ArrayList<String>();
 		joinTypes.add("LEFT");
 		String whereFilter = "p.gender = 'Male'";
 		String multiTableQueryExpression = qrMan.createMultiTableQueryExpression(primaryTable,joinTables,tableAliases,attributeNames,joinFilters,joinTypes,whereFilter);
-		assertEquals(multiTableQueryExpression,expectedMultiTableQuery);
+		assertEquals(expectedMultiTableQuery,multiTableQueryExpression);
+		
+		String rainyExpected = " ";
+		primaryTable = "more_stats";
+		
+		joinTables.clear();
+		tableAliases.clear();
+		attributeNames.clear();
+		joinTypes.clear();
+		
+		joinTables.add("person,person2,person4");
+		
+		tableAliases.add("m");
+		tableAliases.add("   ");
+
+		attributeNames.add("p.first_name");
+		attributeNames.add("p.last_name");
+		attributeNames.add("day");
+		attributeNames.add("m.first_name");
+		attributeNames.add("m.last_name");
+		
+		joinFilters.add("p.ip_address = m.ip_address");
+
+		joinTypes.add("");
+		whereFilter = "p.gender = 'Male'";
+		String newexp = qrMan.createMultiTableQueryExpression(primaryTable,joinTables,tableAliases,attributeNames,joinFilters,joinTypes,whereFilter);
+		assertEquals(rainyExpected,newexp);
 
 	}
 

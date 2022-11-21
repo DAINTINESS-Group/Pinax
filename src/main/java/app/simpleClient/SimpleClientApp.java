@@ -92,24 +92,24 @@ public class SimpleClientApp {
 		
 		
 		String primaryTable = "more_stats";
-		List<String> joinTables = new ArrayList<String>();
+		ArrayList<String> joinTables = new ArrayList<String>();
 		joinTables.add("person");
 		joinTables.add("try");
-		List<String> tableAliases = new ArrayList<String>();
+		ArrayList<String> tableAliases = new ArrayList<String>();
 		tableAliases.add("m");
 		tableAliases.add("p");
 		tableAliases.add("t");
-		List<String> attributeNames = new ArrayList<String>();
+		ArrayList<String> attributeNames = new ArrayList<String>();
 		attributeNames.add("p.first_name");
 		attributeNames.add("p.last_name");
 		attributeNames.add("day");
 		attributeNames.add("m.first_name");
 		attributeNames.add("m.last_name");
 		attributeNames.add("t.PrjActivity");
-		List<String> joinFilters = new ArrayList<String>();
+		ArrayList<String> joinFilters = new ArrayList<String>();
 		joinFilters.add("p.ip_address = m.ip_address");
 		joinFilters.add(" ");
-		List<String> joinTypes = new ArrayList<String>();
+		ArrayList<String> joinTypes = new ArrayList<String>();
 		joinTypes.add("LEFT");
 		joinTypes.add("LEFT");
 		String whereFilter = "p.gender = 'Male' and t.Month > 35";
