@@ -119,8 +119,7 @@ class SchemaManager implements SchemaManagerInterface{
 		fileContents = fileContents.subList(1,fileContents.size());
 		for(String[] content : fileContents) {
 			Path path = Paths.get(content[1]);
-			File file = new File(path.toString());
-			if(file.exists()) {
+			if(path.toFile().exists()) {
 				String fileAlias = content[0];
 				String fileType = content[2];
 				String delimiter = delimiterSelector(fileType);
