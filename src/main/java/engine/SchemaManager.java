@@ -92,8 +92,14 @@ class SchemaManager implements SchemaManagerInterface{
 			String[] columns = line.split(delimiter);
 			String[] temp = line2.split(delimiter);
 			for(int i=0;i<columns.length;i++) {
-				String name = columns[i];
-				String type = temp[i].getClass().getSimpleName();
+				String name = "";
+				String type = "";
+				if(columns[i] != null && !columns[i].trim().isEmpty()) {
+					name = columns[i];
+				}
+				if(temp[i] != null && !temp[i].trim().isEmpty()) {
+					type = temp[i].getClass().getSimpleName();
+				}
 				int position = i;
 				FileColumn tempColumn = new FileColumn(name,type,position);
 				fileColumns.add(tempColumn);
