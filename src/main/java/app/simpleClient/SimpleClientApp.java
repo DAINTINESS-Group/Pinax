@@ -58,16 +58,9 @@ public class SimpleClientApp {
 		List<StructuredFile> fileList = schMan.getFileList();
 		System.out.println("------------------------------------");
 		for(StructuredFile sf: fileList) {
-			if(sf.getSfType().equals("tsv")) {
-				df = spark.read().option("delimiter", "\t").option("header", "true").option("inferSchema","true").csv(sf.getSfPath().toRealPath().toString());
-				df.createGlobalTempView(sf.getSfAlias());
-				System.out.println(sf.getSfAlias());
-			}
-			else if(sf.getSfType().equals("csv")) {
-				df = spark.read().option("delimiter", ",").option("header", "true").option("inferSchema","true").csv(sf.getSfPath().toRealPath().toString());
-				df.createGlobalTempView(sf.getSfAlias());
-				System.out.println(sf.getSfAlias());
-			}
+			df = spark.read().option("delimiter", schMan.delimiterSelector(sf.getSfType())).option("header", "true").option("inferSchema","true").csv(sf.getSfPath().toRealPath().toString());
+			df.createGlobalTempView(sf.getSfAlias());
+			System.out.println(sf.getSfAlias());
 		}
 		System.out.println("------------------------------------");
 	

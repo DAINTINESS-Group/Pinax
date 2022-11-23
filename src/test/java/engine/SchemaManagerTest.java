@@ -106,6 +106,14 @@ class SchemaManagerTest {
 			StructuredFile sfTest = schemaMgr.getFileByAliasName(alias);
 			assertNotEquals(null,sfTest);
 			
+			String expectedCsvDelimiter = ",";
+			String expectedTsvDelimiter = "\t";
+			String expectedTxtDelimiter = " ";
+			
+			assertEquals(expectedCsvDelimiter, schemaMgr.delimiterSelector("csv"));
+			assertEquals(expectedTsvDelimiter, schemaMgr.delimiterSelector("tsv"));
+			assertEquals(expectedTxtDelimiter, schemaMgr.delimiterSelector("txt"));
+			
 			int beforeSize = schemaMgr.getFileList().size();
 			List<String[]> beforeRepoContents = schemaMgr.getRepoFileContents();
 			schemaMgr.registerFileAsDataSource(fileAlias2, path2, fileType2); //register a second file after getting the contents of the file
@@ -122,6 +130,10 @@ class SchemaManagerTest {
 			schemaMgr.wipeFileList();
 			int updatedFileListSize = schemaMgr.updateFileList();
 			assertNotEquals(0,updatedFileListSize); //check if after the registration the update method works
+			Path path3 = Paths.get("src/main/resources/nonExistantFile.tsv");
+			schemaMgr.registerFileAsDataSource(fileAlias2, path3, fileType2); //trying to register a file that does not exist
+			int updatedFileListSize2 = schemaMgr.updateFileList();
+			assertNotEquals(0,updatedFileListSize2); //check if the non-existant file was skipped.
 		} catch (IOException e1) {
 			fail("Could not update file list");
 			e1.printStackTrace();

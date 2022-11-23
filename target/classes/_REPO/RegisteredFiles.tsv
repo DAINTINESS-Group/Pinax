@@ -1,5 +1,3 @@
 RegisteredFileAlias	Path	Type
-more_stats	src\main\resources\more_stats.tsv	tsv
-try	src\main\resources\try.tsv	tsv
-person	src\main\resources\person.tsv	tsv
 joomlatools__joomla_platform_categories	src\main\resources\joomlatools__joomla-platform-categories.tsv	tsv
+try	src\main\resources\try.tsv	tsv

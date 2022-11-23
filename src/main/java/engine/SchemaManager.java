@@ -80,16 +80,17 @@ class SchemaManager implements SchemaManagerInterface{
 	 * Creates a list of filecolumn items, that is used to create the structured file.
 	 * 
 	 * @param path path of the file
+	 * @param delimiter 
 	 * @return the created list
 	 * @throws IOException 
 	 */
-	public List<FileColumn> getColumns(String path) throws IOException {
+	public List<FileColumn> getColumns(String path, String delimiter) throws IOException {
 		List<FileColumn> fileColumns = new ArrayList<FileColumn>();
 		try (BufferedReader br = new BufferedReader(new FileReader(path))) {
 			String line = br.readLine();
 			String line2 = br.readLine();
-			String[] columns = line.split("\t");
-			String[] temp = line2.split("\t");
+			String[] columns = line.split(delimiter);
+			String[] temp = line2.split(delimiter);
 			for(int i=0;i<columns.length;i++) {
 				String name = columns[i];
 				String type = temp[i].getClass().getSimpleName();
@@ -111,12 +112,16 @@ class SchemaManager implements SchemaManagerInterface{
 		List<String[]> fileContents = getRepoFileContents();
 		fileContents = fileContents.subList(1,fileContents.size());
 		for(String[] content : fileContents) {
-			String fileAlias = content[0];
 			Path path = Paths.get(content[1]);
-			String fileType = content[2];
-			List<FileColumn> columnList = getColumns(path.toString());
-			StructuredFile structFileItem = new StructuredFile(fileAlias,path,columnList,fileType);
-			fileList.add(structFileItem);
+			File file = new File(path.toString());
+			if(file.exists()) {
+				String fileAlias = content[0];
+				String fileType = content[2];
+				String delimiter = delimiterSelector(fileType);
+				List<FileColumn> columnList = getColumns(path.toString(), delimiter);
+				StructuredFile structFileItem = new StructuredFile(fileAlias,path,columnList,fileType);
+				fileList.add(structFileItem);
+			}
 		}
 		return fileList.size();
 	}
@@ -147,7 +152,8 @@ class SchemaManager implements SchemaManagerInterface{
 		//add path to the this.FileList
 		//write its info in the _REGISTERED_FILE_REPO
 		try {
-			List<FileColumn> columnList = getColumns(path.toString());
+			String delimiter = delimiterSelector(fileType);
+			List<FileColumn> columnList = getColumns(path.toString(), delimiter);
 			StructuredFile structFileItem = new StructuredFile(fileAlias,path,columnList,fileType);
 			fileList.add(structFileItem);
 			fillRepoFile();
@@ -253,6 +259,20 @@ class SchemaManager implements SchemaManagerInterface{
 			}
 		}
 		return false;
+	}
+	
+	public String delimiterSelector(String fileType) {
+		String delimiter = "";
+		if(fileType.equals("tsv")) {
+			delimiter = "\t";
+		}
+		else if(fileType.equals("csv")) {
+			delimiter = ",";
+		}
+		else if(fileType.equals("txt")) {
+			delimiter = " ";
+		}
+		return delimiter;
 	}
 	
 }//end class

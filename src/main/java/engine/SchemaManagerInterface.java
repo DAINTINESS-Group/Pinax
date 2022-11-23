@@ -61,4 +61,10 @@ public interface SchemaManagerInterface {
 	 * 
 	 */
 	public List<StructuredFile> getFileList();
+	
+	/**
+	 * Selects the proper delimiter depending on the file type given.
+	 * 
+	 */
+	public String delimiterSelector(String fileType);
 }
