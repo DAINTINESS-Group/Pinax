@@ -36,7 +36,6 @@ class SchemaManager implements SchemaManagerInterface{
 	public SchemaManager() throws IOException {
 		this.fileList = new ArrayList<StructuredFile>();
 		updateFileList();
-		//TODO populate the list with the contents of the file repo
 	}
 	
 	public List<StructuredFile> getFileList(){
