@@ -27,6 +27,10 @@ import model.StructuredFile;
 class SchemaManagerTest {
 	static SchemaManager schemaMgr;
 	static SparkSession sparkSession;
+	static Path repoPath = Paths.get("src/main/resources/_REPO/RegisteredFiles.tsv");
+	static Path path;
+	static Path path2;
+	
 	/**
 	 * @throws java.lang.Exception
 	 */
@@ -38,6 +42,9 @@ class SchemaManagerTest {
 				.appName("A simple client to do things with Spark ")
 				.config("spark.master", "local")
 				.getOrCreate();
+		repoPath = Paths.get("src/main/resources/_REPO/RegisteredFiles.tsv");
+		path = Paths.get("src/main/resources/joomlatools__joomla-platform-categories.tsv");
+		path2 = Paths.get("src/main/resources/try.tsv");
 	}
 
 	/**
@@ -68,12 +75,8 @@ class SchemaManagerTest {
 	@Test
 	void testRegisterFileAsDataSource() {
 		long numLines = 0; 
-		Path repoPath = Paths.get("src/main/resources/_REPO/RegisteredFiles.tsv");
-
 		int fileListSize = schemaMgr.wipeFileList();
 		assertEquals(0,fileListSize);
-		
-		
 		try{
 			numLines = schemaMgr.wipeRepoFile();
 			assertEquals(1,numLines);
@@ -82,40 +85,19 @@ class SchemaManagerTest {
 			e.printStackTrace();
 		}
 		
-		Path path = Paths.get("src/main/resources/joomlatools__joomla-platform-categories.tsv");
-		Path path2 = Paths.get("src/main/resources/try.tsv");
 		String fileAlias = schemaMgr.createFileAlias(path.getFileName().toString());
 		String fileType = schemaMgr.getFileType(path.getFileName().toString());
-		String fileAlias2 = schemaMgr.createFileAlias(path2.getFileName().toString());
-		String fileType2 = schemaMgr.getFileType(path2.getFileName().toString());
 		try {
 			int checkRegistration = schemaMgr.registerFileAsDataSource(fileAlias, path, fileType);
 			assertEquals(0,checkRegistration); //check if code 0 returns, meaning all went well
 			numLines = Files.lines(repoPath).count();
 			assertEquals(2,numLines); 
 			assertEquals(1, schemaMgr.getFileList().size()); //check if file list updates
-			
-			StructuredFile testFile = schemaMgr.getFileList().get(0);
-			String alias = testFile.getSfAlias();
-			String expectedAlias = "joomlatools__joomla_platform_categories";
-			String expectedType = "tsv";
-			assertEquals(expectedAlias, alias);
-			assertEquals(path, testFile.getSfPath());
-			assertEquals(expectedType, testFile.getSfType());
-			
-			StructuredFile sfTest = schemaMgr.getFileByAliasName(alias);
-			assertNotEquals(null,sfTest);
-			
-			String expectedCsvDelimiter = ",";
-			String expectedTsvDelimiter = "\t";
-			String expectedTxtDelimiter = " ";
-			
-			assertEquals(expectedCsvDelimiter, schemaMgr.delimiterSelector("csv"));
-			assertEquals(expectedTsvDelimiter, schemaMgr.delimiterSelector("tsv"));
-			assertEquals(expectedTxtDelimiter, schemaMgr.delimiterSelector("txt"));
-			
 			int beforeSize = schemaMgr.getFileList().size();
-			List<String[]> beforeRepoContents = schemaMgr.getRepoFileContents();
+			List<String[]> beforeRepoContents;
+			String fileAlias2 = schemaMgr.createFileAlias(path2.getFileName().toString());
+			String fileType2 = schemaMgr.getFileType(path2.getFileName().toString());
+			beforeRepoContents = schemaMgr.getRepoFileContents();
 			schemaMgr.registerFileAsDataSource(fileAlias2, path2, fileType2); //register a second file after getting the contents of the file
 			int afterSize = schemaMgr.getFileList().size();
 			List<String[]> afterRepoContents = schemaMgr.getRepoFileContents(); //before registering another file to check if get contents works.
@@ -125,8 +107,37 @@ class SchemaManagerTest {
 			fail("Registration did not finish properly");
 			e.printStackTrace();
 		}
+	}
 		
+	@Test
+	void testRegisteredFileInfo() {
+		StructuredFile testFile = schemaMgr.getFileList().get(0);
+		String alias = testFile.getSfAlias();
+		String expectedAlias = "joomlatools__joomla_platform_categories";
+		String expectedType = "tsv";
+		assertEquals(expectedAlias, alias);
+		assertEquals(path, testFile.getSfPath());
+		assertEquals(expectedType, testFile.getSfType());
+		StructuredFile sfTest = schemaMgr.getFileByAliasName(alias);
+		assertNotEquals(null,sfTest);
+	}
+	
+	@Test
+	void testDelimiterSelector() {
+		String expectedCsvDelimiter = ",";
+		String expectedTsvDelimiter = "\t";
+		String expectedTxtDelimiter = " ";
+		
+		assertEquals(expectedCsvDelimiter, schemaMgr.delimiterSelector("csv"));
+		assertEquals(expectedTsvDelimiter, schemaMgr.delimiterSelector("tsv"));
+		assertEquals(expectedTxtDelimiter, schemaMgr.delimiterSelector("txt"));
+	}
+	
+	@Test	
+	void testNullData(){
 		try { //this is done after registration to make sure repoFile has files registered
+			String fileAlias2 = schemaMgr.createFileAlias(path2.getFileName().toString());
+			String fileType2 = schemaMgr.getFileType(path2.getFileName().toString());
 			schemaMgr.wipeFileList();
 			int updatedFileListSize = schemaMgr.updateFileList();
 			assertNotEquals(0,updatedFileListSize); //check if after the registration the update method works
@@ -138,7 +149,6 @@ class SchemaManagerTest {
 			fail("Could not update file list");
 			e1.printStackTrace();
 		}
-
 	}
 
 }
