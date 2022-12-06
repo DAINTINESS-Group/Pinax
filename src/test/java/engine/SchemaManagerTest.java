@@ -150,5 +150,4 @@ class SchemaManagerTest {
 			e1.printStackTrace();
 		}
 	}
-
 }
