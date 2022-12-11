@@ -3,6 +3,8 @@ package app.simpleClient;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.EventQueue;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
@@ -34,8 +36,12 @@ import com.opencsv.exceptions.CsvException;
 import engine.SchemaManagerInterface;
 import engine.SchemaManagerFactory;
 import model.StructuredFile;
+import querymanager.QueryManagerFactory;
+import querymanager.QueryManagerInterface;
 import scala.Tuple2;
 import engine.FunctionManager;
+import javax.swing.JLabel;
+import javax.swing.JTextField;
 
 
 public class SimpleClientApp {
@@ -50,6 +56,7 @@ public class SimpleClientApp {
 			.appName("A simple client to do things with Spark ")
 			.config("spark.master", "local")
 			.getOrCreate();
+	private JTextField primaryTableTextField;
 		
 		
 	// WE DONOT WANT A MAIN WITH INTERACTION. WILL HAVE A GUI FOR THIS
@@ -79,88 +86,8 @@ public class SimpleClientApp {
 		catch (Throwable ex) {
 			old = null;
 		}
-		
-		/*SchemaManagerInterface schMan = new SchemaManagerFactory().createSchemaManager();
 		QueryManagerInterface qrMan = new QueryManagerFactory().createQueryManager();
-	
-		Dataset<Row> df = null;
-		
-		schMan.wipeRepoFile();
-		schMan.wipeFileList();
-		
-		String[] filePaths = {"src/main/resources/more_stats.tsv",
-								"src/main/resources/try.tsv", 
-								"src/main/resources/person.tsv", 
-								"src/main/resources/joomlatools__joomla-platform-categories.tsv"};
-		for(String s: filePaths) {
-			Path path = Paths.get(s);
-			String fileAlias = schMan.createFileAlias(path.getFileName().toString());
-			String fileType = schMan.getFileType(path.getFileName().toString());
-			schMan.registerFileAsDataSource(fileAlias, path, fileType);
-		}
-		
-		List<StructuredFile> fileList = schMan.getFileList();
-		System.out.println("------------------------------------");
-		for(StructuredFile sf: fileList) {
-			df = spark.read().option("delimiter", schMan.delimiterSelector(sf.getSfType())).option("header", "true").option("inferSchema","true").csv(sf.getSfPath().toRealPath().toString());
-			df.createGlobalTempView(sf.getSfAlias());
-			System.out.println(sf.getSfAlias());
-		}
-		System.out.println("------------------------------------");
-	
-		String naiveQueryExpression = qrMan.createNaiveQueryExpression("more_stats");
-		spark.sql(naiveQueryExpression).show((int)df.count(),false);
-		
-		List<String> listOfAttributes = new ArrayList<String>();
-		listOfAttributes.add("first_name");
-		listOfAttributes.add("last_name");
-		listOfAttributes.add("day");
-		String projectionOnlyQueryExpression = qrMan.createProjectionOnlyQueryExpression("more_stats", listOfAttributes);
-		spark.sql(projectionOnlyQueryExpression).show((int)df.count(),false);
-		
-		List<String> anotherListOfAttributes = new ArrayList<String>();
-		anotherListOfAttributes.add("first_name");
-		anotherListOfAttributes.add("last_name");
-		anotherListOfAttributes.add("day");
-		String filters = " stats.last_name = 'kon' and first_name = 'stelios'";
-		String projectSelectSingleTableQueryExpression = qrMan.createProjectSelectSingleTableQueryExpression("more_stats", "stats", anotherListOfAttributes, filters);
-		System.out.println(projectSelectSingleTableQueryExpression);
-		spark.sql(projectSelectSingleTableQueryExpression).show((int)df.count(),false);
-		
-		
-		String primaryTable = "more_stats";
-		ArrayList<String> joinTables = new ArrayList<String>();
-		joinTables.add("person");
-		joinTables.add("try");
-		ArrayList<String> tableAliases = new ArrayList<String>();
-		tableAliases.add("m");
-		tableAliases.add("p");
-		tableAliases.add("t");
-		ArrayList<String> attributeNames = new ArrayList<String>();
-		attributeNames.add("p.first_name");
-		attributeNames.add("p.last_name");
-		attributeNames.add("day");
-		attributeNames.add("m.first_name");
-		attributeNames.add("m.last_name");
-		attributeNames.add("t.PrjActivity");
-		ArrayList<String> joinFilters = new ArrayList<String>();
-		joinFilters.add("p.ip_address = m.ip_address");
-		joinFilters.add(" ");
-		ArrayList<String> joinTypes = new ArrayList<String>();
-		joinTypes.add("LEFT");
-		joinTypes.add("LEFT");
-		String whereFilter = "p.gender = 'Male' and t.Month > 35";
-		
-		String multiTableQueryExpression = qrMan.createMultiTableQueryExpression(primaryTable,joinTables,tableAliases,attributeNames,joinFilters,joinTypes,whereFilter);
-		System.out.println(multiTableQueryExpression);
-		spark.sql(multiTableQueryExpression).show((int)df.count(),false);
-		
-		//Dataset<Row> df = spark.read().option("delimiter", "\t").option("header", "true").option("inferSchema","true").csv(path.toRealPath().toString());
-		//df = spark.read().option("delimiter", ",").option("header", "true").option("inferSchema","true").csv();
-		//ignore any front-end mambo jumbo. do it programmatically in the client.
-		//try some stuff to see if it works
-		spark.stop();*/
-		System.out.println("You exited the program");
+
 	}
 	
 	public static SimpleClientApp getSingletonView()
@@ -196,7 +123,7 @@ public class SimpleClientApp {
 		SchemaManagerInterface schMan = new SchemaManagerFactory().createSchemaManager();
 		frame = new JFrame();
 		frame.setTitle("MSAccess");
-		frame.setBounds(50, 25, 1200, 750);
+		frame.setBounds(50, 25, 600, 450);
 		frame.addWindowListener(new WindowAdapter() {
 	        public void windowClosing(WindowEvent e) {
 	        	int confirmed = JOptionPane.showConfirmDialog(null,"Are you sure you want to exit the program?", "Exit Program Message Box",JOptionPane.YES_NO_OPTION);
@@ -225,7 +152,7 @@ public class SimpleClientApp {
 		
 		JSplitPane splitPane = new JSplitPane();
 		frame.getContentPane().add(splitPane, BorderLayout.CENTER);
-		splitPane.setDividerLocation(300);
+		splitPane.setDividerLocation(190);
 		
 		leftPanel = new JPanel();
 		leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.Y_AXIS));
@@ -238,6 +165,20 @@ public class SimpleClientApp {
 		rightPanel = new JPanel();
 		splitPane.setRightComponent(rightPanel);
 		rightPanel.setLayout(null);	
+		
+		JLabel lblNewLabel = new JLabel("Primary Table");
+		lblNewLabel.setBounds(10, 11, 70, 14);
+		rightPanel.add(lblNewLabel);
+		
+		primaryTableTextField = new JTextField();
+		primaryTableTextField.setBounds(10, 36, 201, 20);
+		rightPanel.add(primaryTableTextField);
+		primaryTableTextField.setColumns(10);
+		
+		JButton btnNewButton = new JButton("Run Query");
+		openItem.addActionListener(func.createCommand("Run"));
+		btnNewButton.setBounds(255, 350, 123, 23);
+		rightPanel.add(btnNewButton);
 	}
 	
 	public void createJTables(String fileAlias, Dataset<Row> df) {
@@ -283,6 +224,5 @@ public class SimpleClientApp {
 				System.out.println("df exists already");
 			}
 		}
-
 	}
 }
