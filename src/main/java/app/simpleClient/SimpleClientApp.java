@@ -3,8 +3,8 @@ package app.simpleClient;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.EventQueue;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
@@ -40,6 +40,7 @@ import querymanager.QueryManagerFactory;
 import querymanager.QueryManagerInterface;
 import scala.Tuple2;
 import engine.FunctionManager;
+
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
@@ -47,8 +48,9 @@ import javax.swing.JTextField;
 public class SimpleClientApp {
 	
 	private static SimpleClientApp mainw;
+	private Dataset<Row> df;
 	private JFrame frame;
-	private FunctionManager func = new FunctionManager();
+	private FunctionManager function = new FunctionManager();
 	private JPanel leftPanel;
 	private JPanel rightPanel;
 	private SparkSession spark = SparkSession
@@ -57,7 +59,6 @@ public class SimpleClientApp {
 			.config("spark.master", "local")
 			.getOrCreate();
 	private JTextField primaryTableTextField;
-		
 		
 	// WE DONOT WANT A MAIN WITH INTERACTION. WILL HAVE A GUI FOR THIS
 	//FOR THE MOMENT WE NEED A SIMPLE CLIENT THAT MAKES BACK-END CALLS VIA THE INTERFACES
@@ -86,8 +87,6 @@ public class SimpleClientApp {
 		catch (Throwable ex) {
 			old = null;
 		}
-		QueryManagerInterface qrMan = new QueryManagerFactory().createQueryManager();
-
 	}
 	
 	public static SimpleClientApp getSingletonView()
@@ -101,9 +100,8 @@ public class SimpleClientApp {
 		return frame;
 	}
 	
-	public void closeOperation() {
-		spark.stop();
-		
+	public SparkSession getSparkSession() {
+		return spark;
 	}
 	
 	public JPanel getLeftPanel() {
@@ -114,15 +112,22 @@ public class SimpleClientApp {
 		return rightPanel;
 	}
 	
+	public JTextField getPrimaryTableTextField() {
+		return primaryTableTextField;
+	}
+
+	public void setPrimaryTableTextField(JTextField primaryTableTextField) {
+		this.primaryTableTextField = primaryTableTextField;
+	}
+	
 	/**
 	 * Initialize the contents of the frame.
 	 * @throws IOException 
 	 */
 	private void initialize() throws IOException {
-		//QueryManagerInterface qrMan = new QueryManagerFactory().createQueryManager();
 		SchemaManagerInterface schMan = new SchemaManagerFactory().createSchemaManager();
 		frame = new JFrame();
-		frame.setTitle("MSAccess");
+		frame.setTitle("Pinax");
 		frame.setBounds(50, 25, 600, 450);
 		frame.addWindowListener(new WindowAdapter() {
 	        public void windowClosing(WindowEvent e) {
@@ -147,7 +152,7 @@ public class SimpleClientApp {
 		frame.setJMenuBar(menuBar);
 		
 		JButton openItem = new JButton("Add Files");
-		openItem.addActionListener(func.createCommand("Select"));
+		openItem.addActionListener(function.createCommand("Select"));
 		menuBar.add(openItem);
 		
 		JSplitPane splitPane = new JSplitPane();
@@ -176,7 +181,16 @@ public class SimpleClientApp {
 		primaryTableTextField.setColumns(10);
 		
 		JButton btnNewButton = new JButton("Run Query");
-		openItem.addActionListener(func.createCommand("Run"));
+		btnNewButton.addActionListener(new ActionListener() { 
+		    public void actionPerformed(ActionEvent e) {
+		    	try {
+					queryRunner();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+		    }
+		});
 		btnNewButton.setBounds(255, 350, 123, 23);
 		rightPanel.add(btnNewButton);
 	}
@@ -212,7 +226,7 @@ public class SimpleClientApp {
 	
 	public void loadFiles() throws AnalysisException, IOException {
 		SchemaManagerInterface schMan = new SchemaManagerFactory().createSchemaManager();
-		Dataset<Row> df = null;
+		df = null;
 		List<StructuredFile> fileList = schMan.getFileList();
 		for(StructuredFile sf: fileList) {
 			try {
@@ -224,5 +238,12 @@ public class SimpleClientApp {
 				System.out.println("df exists already");
 			}
 		}
+	}
+	
+	public void queryRunner() throws IOException {
+		QueryManagerInterface qrMan = new QueryManagerFactory().createQueryManager();
+		String naiveQueryExpression = qrMan.createNaiveQueryExpression(primaryTableTextField.getText());
+		spark.sql(naiveQueryExpression).show((int)df.count(),false);
+
 	}
 }

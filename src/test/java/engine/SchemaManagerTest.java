@@ -54,20 +54,6 @@ class SchemaManagerTest {
 	static void tearDownAfterClass() throws Exception {
 		sparkSession.stop();
 	}
-//
-//	/**
-//	 * @throws java.lang.Exception
-//	 */
-//	@BeforeEach
-//	void setUp() throws Exception {
-//	}
-//
-//	/**
-//	 * @throws java.lang.Exception
-//	 */
-//	@AfterEach
-//	void tearDown() throws Exception {
-//	}
 
 	/**
 	 * Test method for {@link engine.SchemaManager#registerFileAsDataSource(java.lang.String, java.nio.file.Path, java.lang.String)}.
