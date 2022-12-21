@@ -59,7 +59,13 @@ public class SimpleClientApp {
 			.config("spark.master", "local")
 			.getOrCreate();
 	private JTextField primaryTableTextField;
-		
+	private JTextField joinTablesTextField;
+	private JTextField tableAliasesTextField;
+	private JTextField attributeNamesTextField;
+	private JTextField joinFiltersTextField;
+	private JTextField joinTypesTextField;
+	private JTextField whereFilterTextField;
+
 	// WE DONOT WANT A MAIN WITH INTERACTION. WILL HAVE A GUI FOR THIS
 	//FOR THE MOMENT WE NEED A SIMPLE CLIENT THAT MAKES BACK-END CALLS VIA THE INTERFACES
 	//KIND-LIKE-A TEST
@@ -120,6 +126,22 @@ public class SimpleClientApp {
 		this.primaryTableTextField = primaryTableTextField;
 	}
 	
+	public JTextField getJoinTablesTextField() {
+		return joinTablesTextField;
+	}
+	
+	public JTextField getTableAliasesTextField() {
+		return tableAliasesTextField;
+	}
+	
+	public JTextField getAttributeNamesTextField() {
+		return attributeNamesTextField;
+	}
+	
+	public JTextField getJoinFiltersTextField() {
+		return joinFiltersTextField;
+	}
+	
 	/**
 	 * Initialize the contents of the frame.
 	 * @throws IOException 
@@ -128,7 +150,7 @@ public class SimpleClientApp {
 		SchemaManagerInterface schMan = new SchemaManagerFactory().createSchemaManager();
 		frame = new JFrame();
 		frame.setTitle("Pinax");
-		frame.setBounds(50, 25, 600, 450);
+		frame.setBounds(50, 25, 575, 500);
 		frame.addWindowListener(new WindowAdapter() {
 	        public void windowClosing(WindowEvent e) {
 	        	int confirmed = JOptionPane.showConfirmDialog(null,"Are you sure you want to exit the program?", "Exit Program Message Box",JOptionPane.YES_NO_OPTION);
@@ -169,16 +191,70 @@ public class SimpleClientApp {
     
 		rightPanel = new JPanel();
 		splitPane.setRightComponent(rightPanel);
-		rightPanel.setLayout(null);	
+		rightPanel.setLayout(null);
 		
 		JLabel lblNewLabel = new JLabel("Primary Table");
 		lblNewLabel.setBounds(10, 11, 70, 14);
 		rightPanel.add(lblNewLabel);
 		
 		primaryTableTextField = new JTextField();
-		primaryTableTextField.setBounds(10, 36, 201, 20);
+		primaryTableTextField.setBounds(10, 36, 313, 20);
 		rightPanel.add(primaryTableTextField);
 		primaryTableTextField.setColumns(10);
+		
+		JLabel joinTablesLabel = new JLabel("Tables for joining");
+		joinTablesLabel.setBounds(10, 67, 91, 14);
+		rightPanel.add(joinTablesLabel);
+		
+		joinTablesTextField = new JTextField();
+		joinTablesTextField.setBounds(10, 92, 313, 20);
+		rightPanel.add(joinTablesTextField);
+		joinTablesTextField.setColumns(10);
+		
+		JLabel tableAliasesLabel = new JLabel("Table Aliases");
+		tableAliasesLabel.setBounds(10, 123, 70, 14);
+		rightPanel.add(tableAliasesLabel);
+		
+		tableAliasesTextField = new JTextField();
+		tableAliasesTextField.setBounds(10, 148, 313, 20);
+		rightPanel.add(tableAliasesTextField);
+		tableAliasesTextField.setColumns(10);
+		
+		JLabel attributeNamesLabel = new JLabel("Attributes to be returned");
+		attributeNamesLabel.setBounds(10, 179, 132, 14);
+		rightPanel.add(attributeNamesLabel);
+		
+		attributeNamesTextField = new JTextField();
+		attributeNamesTextField.setBounds(10, 204, 313, 20);
+		rightPanel.add(attributeNamesTextField);
+		attributeNamesTextField.setColumns(10);
+		
+		JLabel joinFiltersLabel = new JLabel("Join Filters");
+		joinFiltersLabel.setBounds(10, 235, 70, 14);
+		rightPanel.add(joinFiltersLabel);
+		
+		joinFiltersTextField = new JTextField();
+		joinFiltersTextField.setBounds(10, 260, 313, 20);
+		rightPanel.add(joinFiltersTextField);
+		joinFiltersTextField.setColumns(10);
+		
+		JLabel joinTypesLabel = new JLabel("Join Types");
+		joinTypesLabel.setBounds(10, 291, 70, 14);
+		rightPanel.add(joinTypesLabel);
+		
+		joinTypesTextField = new JTextField();
+		joinTypesTextField.setBounds(10, 316, 313, 20);
+		rightPanel.add(joinTypesTextField);
+		joinTypesTextField.setColumns(10);
+		
+		JLabel whereFilterLabel = new JLabel("Where Filters");
+		whereFilterLabel.setBounds(10, 347, 70, 14);
+		rightPanel.add(whereFilterLabel);
+		
+		whereFilterTextField = new JTextField();
+		whereFilterTextField.setBounds(10, 372, 313, 20);
+		rightPanel.add(whereFilterTextField);
+		whereFilterTextField.setColumns(10);
 		
 		JButton btnNewButton = new JButton("Run Query");
 		btnNewButton.addActionListener(new ActionListener() { 
@@ -191,7 +267,7 @@ public class SimpleClientApp {
 				}
 		    }
 		});
-		btnNewButton.setBounds(255, 350, 123, 23);
+		btnNewButton.setBounds(200, 400, 123, 23);
 		rightPanel.add(btnNewButton);
 	}
 	
@@ -242,8 +318,34 @@ public class SimpleClientApp {
 	
 	public void queryRunner() throws IOException {
 		QueryManagerInterface qrMan = new QueryManagerFactory().createQueryManager();
-		String naiveQueryExpression = qrMan.createNaiveQueryExpression(primaryTableTextField.getText());
-		spark.sql(naiveQueryExpression).show((int)df.count(),false);
-
+		if(pickProperQueryConstructor() == 1) {
+			String naiveQueryExpression = qrMan.createNaiveQueryExpression(primaryTableTextField.getText());
+			spark.sql(naiveQueryExpression).show((int)df.count(),false);
+		}
+	}
+	
+	public int pickProperQueryConstructor() {
+		if(checkIfTFBlank(primaryTableTextField.getText())) {
+			if(!checkIfTFBlank(attributeNamesTextField.getText())) {
+				return 1;
+			}
+			else if(checkIfTFBlank(tableAliasesTextField.getText()) && checkIfTFBlank(whereFilterTextField.getText())) {
+				return 2;
+			}
+			else if(checkIfTFBlank(joinTypesTextField.getText()) 
+					&& checkIfTFBlank(joinFiltersTextField.getText()) 
+					&& checkIfTFBlank(tableAliasesTextField.getText())
+					&& checkIfTFBlank(joinTablesTextField.getText())) {
+				return 3;
+			}
+		}
+		return -1;
+	}
+	
+	public boolean checkIfTFBlank(String str) {
+		if(str != null && !str.trim().isEmpty()) {
+			return true;
+		}
+		return false;
 	}
 }
