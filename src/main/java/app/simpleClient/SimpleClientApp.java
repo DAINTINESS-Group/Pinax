@@ -9,7 +9,9 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -322,30 +324,64 @@ public class SimpleClientApp {
 			String naiveQueryExpression = qrMan.createNaiveQueryExpression(primaryTableTextField.getText());
 			spark.sql(naiveQueryExpression).show((int)df.count(),false);
 		}
+		else if(pickProperQueryConstructor() == 2) {
+			String projectionOnlyQueryExpression = qrMan.createProjectionOnlyQueryExpression(primaryTableTextField.getText(),createTFList(attributeNamesTextField.getText()));
+			spark.sql(projectionOnlyQueryExpression).show((int)df.count(),false);
+		}
+		else if(pickProperQueryConstructor() == 3) {
+			String projectSelectSingleTableQueryExpression = 
+					qrMan.createProjectSelectSingleTableQueryExpression(
+							primaryTableTextField.getText(),
+							tableAliasesTextField.getText(),
+							createTFList(attributeNamesTextField.getText()),
+							whereFilterTextField.getText()
+							);
+			spark.sql(projectSelectSingleTableQueryExpression).show((int)df.count(),false);
+		}
+		else if(pickProperQueryConstructor() == 4) {
+			String multiTableQueryExpression = 
+					qrMan.createMultiTableQueryExpression(
+							primaryTableTextField.getText(),
+							createTFList(joinTablesTextField.getText()),
+							createTFList(tableAliasesTextField.getText()),
+							createTFList(attributeNamesTextField.getText()),
+							createTFList(joinFiltersTextField.getText()),
+							createTFList(joinTypesTextField.getText()),
+							whereFilterTextField.getText()
+							);
+			spark.sql(multiTableQueryExpression).show((int)df.count(),false);
+		}
 	}
 	
 	public int pickProperQueryConstructor() {
-		if(checkIfTFBlank(primaryTableTextField.getText())) {
-			if(!checkIfTFBlank(attributeNamesTextField.getText())) {
+		if(checkTFFilled(primaryTableTextField.getText())) {
+			if(!checkTFFilled(attributeNamesTextField.getText())) {
 				return 1;
 			}
-			else if(checkIfTFBlank(tableAliasesTextField.getText()) && checkIfTFBlank(whereFilterTextField.getText())) {
-				return 2;
+			else if(checkTFFilled(joinTypesTextField.getText()) 
+					&& checkTFFilled(tableAliasesTextField.getText())
+					&& checkTFFilled(joinTablesTextField.getText())) {
+				return 4;
 			}
-			else if(checkIfTFBlank(joinTypesTextField.getText()) 
-					&& checkIfTFBlank(joinFiltersTextField.getText()) 
-					&& checkIfTFBlank(tableAliasesTextField.getText())
-					&& checkIfTFBlank(joinTablesTextField.getText())) {
+			else if(checkTFFilled(tableAliasesTextField.getText()) && checkTFFilled(whereFilterTextField.getText())) {
 				return 3;
 			}
-		}
+			else{
+				return 2;
+			}
+		} 
 		return -1;
 	}
 	
-	public boolean checkIfTFBlank(String str) {
+	public boolean checkTFFilled(String str) {
 		if(str != null && !str.trim().isEmpty()) {
 			return true;
 		}
 		return false;
+	}
+	
+	public List<String> createTFList(String contents){
+		List<String> items = Arrays.asList(contents.split(",")).stream().filter(str -> !str.isEmpty()).collect(Collectors.toList());
+		return items;
 	}
 }

@@ -1,6 +1,5 @@
 package querymanager;
 
-import java.util.ArrayList;
 import java.util.List;
 
 //MUST DECIDE WHAT THE QMgr DOES
@@ -23,11 +22,11 @@ public class QueryManager implements QueryManagerInterface{
 	
 	public String createMultiTableQueryExpression(
 			String primaryTable,
-			ArrayList<String> joinTables,
-			ArrayList<String> tableAliases,
-			ArrayList<String> attributeNames,
-			ArrayList<String> joinFilters,
-			ArrayList<String> joinTypes,
+			List<String> joinTables,
+			List<String> tableAliases,
+			List<String> attributeNames,
+			List<String> joinFilters,
+			List<String> joinTypes,
 			String whereFilter) {
 		String query = "SELECT " + String.join(", ", attributeNames)
 				+ " FROM global_temp." + primaryTable + " AS " + tableAliases.get(0);
@@ -44,6 +43,8 @@ public class QueryManager implements QueryManagerInterface{
 		}
 		for(int i=0; i<joinTypes.size(); i++) {
 			query += " " + joinTypes.get(i) + " JOIN global_temp." + joinTables.get(i) + " AS " + tableAliases.get(i);
+		}
+		for(int i=0; i<joinFilters.size(); i++) {
 			if(joinFilters.get(i) != null && !joinFilters.get(i).trim().isEmpty()) {
 				query += " ON " + joinFilters.get(i);
 			}
@@ -54,7 +55,7 @@ public class QueryManager implements QueryManagerInterface{
 		return query;
 	}
 	
-	private ArrayList<String> trimmerMethod(ArrayList<String> list){
+	private List<String> trimmerMethod(List<String> list){
 		for(int i=0; i<list.size(); i++) {
 			if(list.get(i) != null && !list.get(i).trim().isEmpty()) {
 				continue;
@@ -65,5 +66,4 @@ public class QueryManager implements QueryManagerInterface{
 		}
 		return list;
 	}
-	
 }
