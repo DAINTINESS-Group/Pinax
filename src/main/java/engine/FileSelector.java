@@ -7,7 +7,7 @@ import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.filechooser.FileSystemView;
 
-import app.simpleClient.SimpleClientApp;
+import app.simpleClient.UserInterface;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -16,7 +16,7 @@ import java.nio.file.Paths;
 public class FileSelector implements ActionListener {
 	
 	private File[] files;
-	private SimpleClientApp mainw = SimpleClientApp.getSingletonView();
+	private UserInterface mainw = UserInterface.getSingletonView();
 
 	public void filterFile(JFileChooser jfc) {
 		FileNameExtensionFilter filter = new FileNameExtensionFilter("tsv,csv Files", "csv", "tsv");
