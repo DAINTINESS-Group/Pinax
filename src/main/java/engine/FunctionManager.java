@@ -9,10 +9,6 @@ public class FunctionManager {
 			FileSelector selector = new FileSelector();
 			return  selector;
 		}
-		if(type.equals("Run")) {
-			FileSelector test = new FileSelector();
-			return  test;
-		}
 		return null;
 	}
 }

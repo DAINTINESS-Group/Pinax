@@ -23,7 +23,6 @@ class QueryManagerTest {
 
 	@Test
 	void testNaiveQueryExpression() throws IOException {
-		
 		String expectedNaiveQuery = "SELECT * FROM global_temp.table";
 		String testNaive = qrMan.createNaiveQueryExpression("table");
 		assertEquals(testNaive,expectedNaiveQuery);
@@ -69,31 +68,36 @@ class QueryManagerTest {
 		String whereFilter = "p.gender = 'Male'";
 		String multiTableQueryExpression = qrMan.createMultiTableQueryExpression(primaryTable,joinTables,tableAliases,attributeNames,joinFilters,joinTypes,whereFilter);
 		assertEquals(expectedMultiTableQuery,multiTableQueryExpression);
-		
+	}
+	
+	@Test
+	void rainyTestMultiTableQueryExpression() {
 		String rainyExpected = " ";
-		primaryTable = "more_stats";
+		String primaryTable = "more_stats";
 		
-		joinTables.clear();
-		tableAliases.clear();
-		attributeNames.clear();
-		joinTypes.clear();
-		
+		ArrayList<String> joinTables = new ArrayList<String>();
 		joinTables.add("person,person2,person4");
 		
+		ArrayList<String> tableAliases = new ArrayList<String>();
 		tableAliases.add("m");
 		tableAliases.add("   ");
 
+		ArrayList<String> attributeNames = new ArrayList<String>();
 		attributeNames.add("p.first_name");
 		attributeNames.add("p.last_name");
 		attributeNames.add("day");
 		attributeNames.add("m.first_name");
 		attributeNames.add("m.last_name");
 		
+		ArrayList<String> joinFilters = new ArrayList<String>();
 		joinFilters.add("p.ip_address = m.ip_address");
 
+		ArrayList<String> joinTypes = new ArrayList<String>();
 		joinTypes.add("");
-		whereFilter = "p.gender = 'Male'";
+		
+		String whereFilter = "p.gender = 'Male'";
 		String newexp = qrMan.createMultiTableQueryExpression(primaryTable,joinTables,tableAliases,attributeNames,joinFilters,joinTypes,whereFilter);
 		assertEquals(rainyExpected,newexp);
 	}
+	
 }

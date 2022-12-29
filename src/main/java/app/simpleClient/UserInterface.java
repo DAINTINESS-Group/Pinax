@@ -49,7 +49,7 @@ public class UserInterface {
 	private FunctionManager function = new FunctionManager();
 	private JPanel leftPanel;
 	private JPanel rightPanel;
-	private JButton btnNewButton;
+	private JButton queryRunner;
 	private SparkSession spark = SparkSession
 			.builder()
 			.appName("A simple client to do things with Spark ")
@@ -200,6 +200,7 @@ public class UserInterface {
 		
 		primaryTableTextField = new JTextField();
 		primaryTableTextField.setBounds(10, 36, 313, 20);
+		primaryTableTextField.setToolTipText("eg: person ");
 		rightPanel.add(primaryTableTextField);
 		primaryTableTextField.setColumns(10);
 		
@@ -209,6 +210,7 @@ public class UserInterface {
 		
 		joinTablesTextField = new JTextField();
 		joinTablesTextField.setBounds(10, 92, 313, 20);
+		joinTablesTextField.setToolTipText("eg: try,more_stats ");
 		rightPanel.add(joinTablesTextField);
 		joinTablesTextField.setColumns(10);
 		
@@ -218,6 +220,7 @@ public class UserInterface {
 		
 		tableAliasesTextField = new JTextField();
 		tableAliasesTextField.setBounds(10, 148, 313, 20);
+		tableAliasesTextField.setToolTipText("eg: p,m,c ");
 		rightPanel.add(tableAliasesTextField);
 		tableAliasesTextField.setColumns(10);
 		
@@ -227,6 +230,7 @@ public class UserInterface {
 		
 		attributeNamesTextField = new JTextField();
 		attributeNamesTextField.setBounds(10, 204, 313, 20);
+		attributeNamesTextField.setToolTipText("eg: month,p.id,m.first_name ");
 		rightPanel.add(attributeNamesTextField);
 		attributeNamesTextField.setColumns(10);
 		
@@ -236,6 +240,7 @@ public class UserInterface {
 		
 		joinFiltersTextField = new JTextField();
 		joinFiltersTextField.setBounds(10, 260, 313, 20);
+		joinFiltersTextField.setToolTipText("eg: Month > 5 and name = 'Joe' ");
 		rightPanel.add(joinFiltersTextField);
 		joinFiltersTextField.setColumns(10);
 		
@@ -245,6 +250,7 @@ public class UserInterface {
 		
 		joinTypesTextField = new JTextField();
 		joinTypesTextField.setBounds(10, 316, 313, 20);
+		joinTypesTextField.setToolTipText("eg: Left,Right,Full ");
 		rightPanel.add(joinTypesTextField);
 		joinTypesTextField.setColumns(10);
 		
@@ -254,11 +260,12 @@ public class UserInterface {
 		
 		whereFilterTextField = new JTextField();
 		whereFilterTextField.setBounds(10, 372, 313, 20);
+		whereFilterTextField.setToolTipText("eg: Month > 5 and name = 'Joe' ");
 		rightPanel.add(whereFilterTextField);
 		whereFilterTextField.setColumns(10);
 		
-		this.btnNewButton = new JButton("Run Query");
-		btnNewButton.addActionListener(new ActionListener() { 
+		this.queryRunner = new JButton("Run Query");
+		queryRunner.addActionListener(new ActionListener() { 
 		    public void actionPerformed(ActionEvent e) {
 		    	try {
 		    		SimpleClientApp client = new SimpleClientApp();
@@ -269,13 +276,23 @@ public class UserInterface {
 				}
 		    }
 		});
-		btnNewButton.setBounds(200, 400, 123, 23);
-		rightPanel.add(btnNewButton);
+		queryRunner.setBounds(200, 400, 123, 23);
+		rightPanel.add(queryRunner);
 		
 		JLabel instructionsLabel = new JLabel("<html>\r\nThis are some instructions on how to use this tool properly.<br/>\r\n1. Always add a primary table.<br/>\r\n2. Split everything with a \",\".<br/>\r\n3. Join filters,table aliases and join types always must be in the same order as the tables that will be joined.<br/>\r\n4. The first alias is used for the primary table.<br/>\r\n5. In the attributes list, you need to add the table alias. For example if you give a table the alias p then you must type p.whatever in case the whatever attribute is in more than one tables.<br/>\r\n6. In the where and join filters if you want to compare with a string, always place the string inside quotation marks. For example \" Month = 'January' and Month = 'July' \" where month is the name of the table.</br>\r\n</html>");
 		instructionsLabel.setVerticalAlignment(SwingConstants.TOP);
 		instructionsLabel.setBounds(333, 39, 195, 353);
 		rightPanel.add(instructionsLabel);
+		
+		JButton customQueryButton = new JButton("Custom Query");
+		customQueryButton.addActionListener(new ActionListener() { 
+		    public void actionPerformed(ActionEvent e) {
+		    	CustomQueryFrame customQM = new CustomQueryFrame();
+		    	customQM.setVisible(true);
+		    }
+		});
+		customQueryButton.setBounds(10, 400, 123, 23);
+		rightPanel.add(customQueryButton);
 	}
 	
 	public void loadFiles() throws AnalysisException, IOException {
@@ -312,7 +329,7 @@ public class UserInterface {
 		jt.setDefaultEditor(Object.class, null);
 		panel.add(jt);
 		panel.validate();
-		JScrollPane sp=new JScrollPane(jt);    
+		JScrollPane sp=new JScrollPane(jt);
 		panel.add(sp);
 		mainw.getLeftPanel().add(panel);
 		SwingUtilities.updateComponentTreeUI(mainw.getFrame());

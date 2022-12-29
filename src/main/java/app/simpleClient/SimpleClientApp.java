@@ -11,6 +11,13 @@ public class SimpleClientApp {
 	
 	private UserInterface mainw = UserInterface.getSingletonView();
 	
+	public void runCustomQuery(String customQuery) {
+		customQuery = customQuery.replace("\n", " ").replace("\r", " ");
+		if(checkTFFilled(customQuery)) {
+			mainw.getSparkSession().sql(customQuery).show(99,false);
+		}
+	}
+	
 	public void queryRunner() throws IOException {
 		QueryManagerInterface qrMan = new QueryManagerFactory().createQueryManager();
 		if(pickProperQueryConstructor() == 1) {
