@@ -4,6 +4,10 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import org.apache.spark.sql.Dataset;
+import org.apache.spark.sql.Row;
+
 import querymanager.QueryManagerFactory;
 import querymanager.QueryManagerInterface;
 
@@ -24,6 +28,8 @@ public class SimpleClientApp {
 			String primaryTableString = mainw.getPrimaryTableTextField().getText();
 			String naiveQueryExpression = qrMan.createNaiveQueryExpression(primaryTableString);
 			mainw.getSparkSession().sql(naiveQueryExpression).show(99,false);
+			//Dataset<Row> naiveQueryExpressionDF = mainw.getSparkSession().sql(naiveQueryExpression);
+			
 		}
 		else if(pickProperQueryConstructor() == 2) {
 			String primaryTableString = mainw.getPrimaryTableTextField().getText();

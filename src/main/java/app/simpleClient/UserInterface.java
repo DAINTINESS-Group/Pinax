@@ -323,13 +323,13 @@ public class UserInterface {
 			tableData[i] = dataOfFile.get(i);
 		}
 		JPanel panel = new JPanel();
-		JTable jt=new JTable(tableData,nameOfTable);
+		JTable jt = new JTable(tableData,nameOfTable);
 		Dimension d = jt.getPreferredSize();
 		jt.setPreferredScrollableViewportSize(d);
 		jt.setDefaultEditor(Object.class, null);
 		panel.add(jt);
 		panel.validate();
-		JScrollPane sp=new JScrollPane(jt);
+		JScrollPane sp = new JScrollPane(jt);
 		panel.add(sp);
 		mainw.getLeftPanel().add(panel);
 		SwingUtilities.updateComponentTreeUI(mainw.getFrame());
