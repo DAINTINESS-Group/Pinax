@@ -24,18 +24,19 @@ public class SimpleClientApp {
 	
 	public void queryRunner() throws IOException {
 		QueryManagerInterface qrMan = new QueryManagerFactory().createQueryManager();
+		Dataset<Row> results = null;
 		if(pickProperQueryConstructor() == 1) {
 			String primaryTableString = mainw.getPrimaryTableTextField().getText();
 			String naiveQueryExpression = qrMan.createNaiveQueryExpression(primaryTableString);
-			mainw.getSparkSession().sql(naiveQueryExpression).show(99,false);
-			//Dataset<Row> naiveQueryExpressionDF = mainw.getSparkSession().sql(naiveQueryExpression);
-			
+			//mainw.getSparkSession().sql(naiveQueryExpression).show(99,false);
+			results = mainw.getSparkSession().sql(naiveQueryExpression);
 		}
 		else if(pickProperQueryConstructor() == 2) {
 			String primaryTableString = mainw.getPrimaryTableTextField().getText();
 			String attributesString = mainw.getAttributeNamesTextField().getText();
 			String projectionOnlyQueryExpression = qrMan.createProjectionOnlyQueryExpression(primaryTableString,createTFList(attributesString));
-			mainw.getSparkSession().sql(projectionOnlyQueryExpression).show(99,false);
+			//mainw.getSparkSession().sql(projectionOnlyQueryExpression).show(99,false);
+			results = mainw.getSparkSession().sql(projectionOnlyQueryExpression);
 		}
 		else if(pickProperQueryConstructor() == 3) {
 			String primaryTableString = mainw.getPrimaryTableTextField().getText();
@@ -49,7 +50,8 @@ public class SimpleClientApp {
 							createTFList(attributesString),
 							whereFilterString
 							);
-			mainw.getSparkSession().sql(projectSelectSingleTableQueryExpression).show(99,false);
+			//mainw.getSparkSession().sql(projectSelectSingleTableQueryExpression).show(99,false);
+			results = mainw.getSparkSession().sql(projectSelectSingleTableQueryExpression);
 		}
 		else if(pickProperQueryConstructor() == 4) {
 			String primaryTableString = mainw.getPrimaryTableTextField().getText();
@@ -69,8 +71,12 @@ public class SimpleClientApp {
 							createTFList(joinTypesString),
 							whereFilterString
 							);
-			mainw.getSparkSession().sql(multiTableQueryExpression).show(99,false);
+			//mainw.getSparkSession().sql(multiTableQueryExpression).show(99,false);
+			results = mainw.getSparkSession().sql(multiTableQueryExpression);
 		}
+		ResultFrame frame = new ResultFrame();
+		frame.setVisible(true);
+		frame.createResultJTable(results);
 	}
 	
 	public int pickProperQueryConstructor() {
