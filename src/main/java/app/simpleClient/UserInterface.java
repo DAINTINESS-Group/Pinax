@@ -35,7 +35,8 @@ import org.apache.spark.sql.SparkSession;
 
 import com.opencsv.exceptions.CsvException;
 
-import engine.FunctionManager;
+import engine.FileSelector;
+//import engine.FunctionManager;
 import engine.SchemaManagerFactory;
 import engine.SchemaManagerInterface;
 import model.StructuredFile;
@@ -46,7 +47,7 @@ public class UserInterface {
 	private static UserInterface mainw;
 	private Dataset<Row> df;
 	private JFrame frame;
-	private FunctionManager function = new FunctionManager();
+	//private FunctionManager function = new FunctionManager();
 	private JPanel leftPanel;
 	private JPanel rightPanel;
 	private JButton queryRunner;
@@ -175,7 +176,12 @@ public class UserInterface {
 		frame.setJMenuBar(menuBar);
 		
 		JButton openItem = new JButton("Add Files");
-		openItem.addActionListener(function.createCommand("Select"));
+		openItem.addActionListener(new ActionListener() { 
+		    public void actionPerformed(ActionEvent e) {
+		    	FileSelector selector = new FileSelector();
+				selector.actionPerformed(e);
+		    }
+		});
 		menuBar.add(openItem);
 		
 		JSplitPane splitPane = new JSplitPane();

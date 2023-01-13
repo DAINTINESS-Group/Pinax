@@ -16,10 +16,14 @@ public class SimpleClientApp {
 	private UserInterface mainw = UserInterface.getSingletonView();
 	
 	public void runCustomQuery(String customQuery) {
+		Dataset<Row> results = null;
 		customQuery = customQuery.replace("\n", " ").replace("\r", " ");
 		if(checkTFFilled(customQuery)) {
-			mainw.getSparkSession().sql(customQuery).show(99,false);
+			results = mainw.getSparkSession().sql(customQuery);
 		}
+		ResultFrame frame = new ResultFrame();
+		frame.setVisible(true);
+		frame.createResultJTable(results);
 	}
 	
 	public void queryRunner() throws IOException {
