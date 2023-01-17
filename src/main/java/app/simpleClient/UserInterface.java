@@ -159,6 +159,7 @@ public class UserInterface {
 	        	if (confirmed == JOptionPane.YES_OPTION) {
 	        		try {
 	        			schMan.wipeRepoFile();
+	        			schMan.wipeFileList();
 					} catch (IOException e1) {
 						e1.printStackTrace();
 					}
@@ -312,6 +313,7 @@ public class UserInterface {
 				createJTables(sf.getSfAlias(),df);
 				System.out.println(sf.getSfAlias());
 			} catch (AnalysisException e) {
+				e.printStackTrace();
 				System.out.println("df exists already");
 			}
 		}
@@ -332,7 +334,6 @@ public class UserInterface {
 		JTable jt = new JTable(tableData,nameOfTable);
 		Dimension d = jt.getPreferredSize();
 		jt.setPreferredScrollableViewportSize(d);
-		jt.setDefaultEditor(Object.class, null);
 		panel.add(jt);
 		panel.validate();
 		JScrollPane sp = new JScrollPane(jt);

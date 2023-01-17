@@ -49,7 +49,7 @@ public class ResultFrame extends JFrame {
 		}
 		String tableData[][] = new String[dataOfFile.size()][];
 		for(int i=0;i<dataOfFile.size();i++) {
-			String arr[] = dataOfFile.get(i)[0].split(",");
+			String arr[] = dataOfFile.get(i)[0].replaceAll("[\\[ \\]]", "").split(",");
 			tableData[i] = arr;
 		}
 		JTable jt = new JTable(tableData,exportArrayFromList(namesOfColumns));
