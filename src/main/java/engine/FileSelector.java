@@ -2,11 +2,8 @@ package engine;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import javax.swing.filechooser.FileSystemView;
-
 import app.simpleClient.UserInterface;
 
 import java.io.File;
@@ -26,7 +23,7 @@ public class FileSelector implements ActionListener {
 	
 	public boolean pickFile() throws Exception{
 		SchemaManagerInterface schMan = new SchemaManagerFactory().createSchemaManager();
-		JFileChooser jfc = new JFileChooser(FileSystemView.getFileSystemView().getDefaultDirectory());
+		JFileChooser jfc = new JFileChooser("src/main/resources");
 		filterFile(jfc);
 		jfc.setMultiSelectionEnabled(true);
 		int returnValue = jfc.showOpenDialog(mainw.getFrame());

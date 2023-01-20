@@ -32,14 +32,12 @@ public class SimpleClientApp {
 		if(pickProperQueryConstructor() == 1) {
 			String primaryTableString = mainw.getPrimaryTableTextField().getText();
 			String naiveQueryExpression = qrMan.createNaiveQueryExpression(primaryTableString);
-			//mainw.getSparkSession().sql(naiveQueryExpression).show(99,false);
 			results = mainw.getSparkSession().sql(naiveQueryExpression);
 		}
 		else if(pickProperQueryConstructor() == 2) {
 			String primaryTableString = mainw.getPrimaryTableTextField().getText();
 			String attributesString = mainw.getAttributeNamesTextField().getText();
 			String projectionOnlyQueryExpression = qrMan.createProjectionOnlyQueryExpression(primaryTableString,createTFList(attributesString));
-			//mainw.getSparkSession().sql(projectionOnlyQueryExpression).show(99,false);
 			results = mainw.getSparkSession().sql(projectionOnlyQueryExpression);
 		}
 		else if(pickProperQueryConstructor() == 3) {
@@ -54,7 +52,6 @@ public class SimpleClientApp {
 							createTFList(attributesString),
 							whereFilterString
 							);
-			//mainw.getSparkSession().sql(projectSelectSingleTableQueryExpression).show(99,false);
 			results = mainw.getSparkSession().sql(projectSelectSingleTableQueryExpression);
 		}
 		else if(pickProperQueryConstructor() == 4) {
@@ -75,7 +72,6 @@ public class SimpleClientApp {
 							createTFList(joinTypesString),
 							whereFilterString
 							);
-			//mainw.getSparkSession().sql(multiTableQueryExpression).show(99,false);
 			results = mainw.getSparkSession().sql(multiTableQueryExpression);
 		}
 		ResultFrame frame = new ResultFrame();
