@@ -41,13 +41,11 @@ import engine.SchemaManagerFactory;
 import engine.SchemaManagerInterface;
 import model.StructuredFile;
 import scala.Tuple2;
-import javax.swing.SwingConstants;
 
 public class UserInterface {
 	private static UserInterface mainw;
 	private Dataset<Row> df;
 	private JFrame frame;
-	//private FunctionManager function = new FunctionManager();
 	private JPanel leftPanel;
 	private JPanel rightPanel;
 	private JButton queryRunner;
@@ -64,9 +62,6 @@ public class UserInterface {
 	private JTextField joinTypesTextField;
 	private JTextField whereFilterTextField;
 
-	// WE DONOT WANT A MAIN WITH INTERACTION. WILL HAVE A GUI FOR THIS
-	//FOR THE MOMENT WE NEED A SIMPLE CLIENT THAT MAKES BACK-END CALLS VIA THE INTERFACES
-	//KIND-LIKE-A TEST
 	public static void main(String[] args) throws AnalysisException, IOException, CsvException {
 		Logger rootLogger = Logger.getRootLogger(); //remove the messages of spark
 		rootLogger.setLevel(Level.ERROR);
@@ -152,7 +147,7 @@ public class UserInterface {
 		SchemaManagerInterface schMan = new SchemaManagerFactory().createSchemaManager();
 		frame = new JFrame();
 		frame.setTitle("Pinax");
-		frame.setBounds(50, 25, 750, 500);
+		frame.setBounds(50, 25, 550, 500);
 		frame.addWindowListener(new WindowAdapter() {
 	        public void windowClosing(WindowEvent e) {
 	        	int confirmed = JOptionPane.showConfirmDialog(null,"Are you sure you want to exit the program?", "Exit Program Message Box",JOptionPane.YES_NO_OPTION);
@@ -185,6 +180,15 @@ public class UserInterface {
 		});
 		menuBar.add(openItem);
 		
+		JButton helpItem = new JButton("Help");
+		helpItem.addActionListener(new ActionListener() { 
+		    public void actionPerformed(ActionEvent e) {
+		    	HelpFrame helper = new HelpFrame();
+		    	helper.setVisible(true);
+		    }
+		});
+		menuBar.add(helpItem);
+		
 		JSplitPane splitPane = new JSplitPane();
 		frame.getContentPane().add(splitPane, BorderLayout.CENTER);
 		splitPane.setDividerLocation(190);
@@ -206,7 +210,7 @@ public class UserInterface {
 		rightPanel.add(lblNewLabel);
 		
 		primaryTableTextField = new JTextField();
-		primaryTableTextField.setBounds(10, 36, 313, 20);
+		primaryTableTextField.setBounds(10, 36, 318, 20);
 		primaryTableTextField.setToolTipText("eg: person ");
 		rightPanel.add(primaryTableTextField);
 		primaryTableTextField.setColumns(10);
@@ -216,7 +220,7 @@ public class UserInterface {
 		rightPanel.add(joinTablesLabel);
 		
 		joinTablesTextField = new JTextField();
-		joinTablesTextField.setBounds(10, 92, 313, 20);
+		joinTablesTextField.setBounds(10, 92, 318, 20);
 		joinTablesTextField.setToolTipText("eg: try,more_stats ");
 		rightPanel.add(joinTablesTextField);
 		joinTablesTextField.setColumns(10);
@@ -226,7 +230,7 @@ public class UserInterface {
 		rightPanel.add(tableAliasesLabel);
 		
 		tableAliasesTextField = new JTextField();
-		tableAliasesTextField.setBounds(10, 148, 313, 20);
+		tableAliasesTextField.setBounds(10, 148, 318, 20);
 		tableAliasesTextField.setToolTipText("eg: p,m,c ");
 		rightPanel.add(tableAliasesTextField);
 		tableAliasesTextField.setColumns(10);
@@ -236,7 +240,7 @@ public class UserInterface {
 		rightPanel.add(attributeNamesLabel);
 		
 		attributeNamesTextField = new JTextField();
-		attributeNamesTextField.setBounds(10, 204, 313, 20);
+		attributeNamesTextField.setBounds(10, 204, 318, 20);
 		attributeNamesTextField.setToolTipText("eg: month,p.id,m.first_name ");
 		rightPanel.add(attributeNamesTextField);
 		attributeNamesTextField.setColumns(10);
@@ -246,7 +250,7 @@ public class UserInterface {
 		rightPanel.add(joinFiltersLabel);
 		
 		joinFiltersTextField = new JTextField();
-		joinFiltersTextField.setBounds(10, 260, 313, 20);
+		joinFiltersTextField.setBounds(10, 260, 318, 20);
 		joinFiltersTextField.setToolTipText("eg: Month > 5 and name = 'Joe' ");
 		rightPanel.add(joinFiltersTextField);
 		joinFiltersTextField.setColumns(10);
@@ -256,7 +260,7 @@ public class UserInterface {
 		rightPanel.add(joinTypesLabel);
 		
 		joinTypesTextField = new JTextField();
-		joinTypesTextField.setBounds(10, 316, 313, 20);
+		joinTypesTextField.setBounds(10, 316, 318, 20);
 		joinTypesTextField.setToolTipText("eg: Left,Right,Full ");
 		rightPanel.add(joinTypesTextField);
 		joinTypesTextField.setColumns(10);
@@ -266,7 +270,7 @@ public class UserInterface {
 		rightPanel.add(whereFilterLabel);
 		
 		whereFilterTextField = new JTextField();
-		whereFilterTextField.setBounds(10, 372, 313, 20);
+		whereFilterTextField.setBounds(10, 372, 318, 20);
 		whereFilterTextField.setToolTipText("eg: Month > 5 and name = 'Joe' ");
 		rightPanel.add(whereFilterTextField);
 		whereFilterTextField.setColumns(10);
@@ -283,13 +287,8 @@ public class UserInterface {
 				}
 		    }
 		});
-		queryRunner.setBounds(200, 400, 123, 23);
+		queryRunner.setBounds(205, 400, 123, 23);
 		rightPanel.add(queryRunner);
-		
-		JLabel instructionsLabel = new JLabel("<html>\r\nThis are some instructions on how to use this tool properly.<br/>\r\n1. Always add a primary table.<br/>\r\n2. Split everything with a \",\".<br/>\r\n3. Join filters,table aliases and join types always must be in the same order as the tables that will be joined.<br/>\r\n4. The first alias is used for the primary table.<br/>\r\n5. In the attributes list, you need to add the table alias. For example if you give a table the alias p then you must type p.whatever in case the whatever attribute is in more than one tables.<br/>\r\n6. In the where and join filters if you want to compare with a string, always place the string inside quotation marks. For example \" Month = 'January' and Month = 'July' \" where month is the name of the table.</br>\r\n</html>");
-		instructionsLabel.setVerticalAlignment(SwingConstants.TOP);
-		instructionsLabel.setBounds(333, 39, 195, 353);
-		rightPanel.add(instructionsLabel);
 		
 		JButton customQueryButton = new JButton("Custom Query");
 		customQueryButton.addActionListener(new ActionListener() { 
@@ -311,7 +310,6 @@ public class UserInterface {
 				df = spark.read().option("delimiter", schMan.delimiterSelector(sf.getSfType())).option("header", "true").option("inferSchema","true").csv(sf.getSfPath().toRealPath().toString());
 				df.createGlobalTempView(sf.getSfAlias());
 				createJTables(sf.getSfAlias(),df);
-				System.out.println(sf.getSfAlias());
 			} catch (AnalysisException e) {
 				e.printStackTrace();
 				System.out.println("df exists already");
