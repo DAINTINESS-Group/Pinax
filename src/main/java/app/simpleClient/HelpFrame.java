@@ -47,6 +47,7 @@ public class HelpFrame extends JFrame {
 	    		+ "<br/>\r\n7. All the special characters in the file name are turned into '_'(underscore). "
 	    		+ "When using the said files use _ instead of any character they have in their name.</br>\r\n"
 	    		+ "<br/>\r\n8. You don't have to add the primary table to the join list text field."
+	    		+ "<br/>\r\n9. If you want to save the table as a file just click save as file in the result frame. Don't forget to type a name for the file."
 	    		+ "</html>");
 		instructionsLabel.setVerticalAlignment(SwingConstants.TOP);
 		instructionsLabel.setHorizontalAlignment(SwingConstants.LEFT);
