@@ -22,7 +22,6 @@ import org.apache.spark.sql.Row;
 
 import com.opencsv.CSVWriter;
 
-import engine.FileSelector;
 import scala.Tuple2;
 import javax.swing.JButton;
 import javax.swing.JTextField;

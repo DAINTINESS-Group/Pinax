@@ -1,10 +1,12 @@
-package engine;
+package app.simpleClient;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import app.simpleClient.UserInterface;
+
+import engine.SchemaManagerFactory;
+import engine.SchemaManagerInterface;
 
 import java.io.File;
 import java.nio.file.Path;
