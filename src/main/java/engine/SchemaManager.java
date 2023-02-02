@@ -176,7 +176,7 @@ class SchemaManager implements SchemaManagerInterface{
 	 * null otherwise
 	 * 
 	 * @param pAlias
-	 * @return
+	 * @return a structuredFileItem
 	 * @throws CsvException 
 	 * @throws IOException 
 	 */
@@ -230,6 +230,11 @@ class SchemaManager implements SchemaManagerInterface{
 		return 1;
 	}
 	
+	/**
+	 * Returns the contents of the Repo file.
+	 * @return an array list with the contents of the repo file.
+	 * @throws IOException
+	 */
 	public List<String[]> getRepoFileContents() throws IOException {
 		List<String[]> data = new ArrayList<>(); //initializing a new List out of String[]'s
 		String line = null;
