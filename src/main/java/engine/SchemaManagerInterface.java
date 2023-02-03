@@ -67,4 +67,15 @@ public interface SchemaManagerInterface {
 	 * 
 	 */
 	public String delimiterSelector(String fileType);
+	
+	public String createNaiveQueryExpression(String primaryTableString);
+	
+	public String createProjectionOnlyQueryExpression(String primaryTableString, List<String> createTFList);
+
+	public String createProjectSelectSingleTableQueryExpression(String primaryTableString, String tableAliasString,
+			List<String> createTFList, String whereFilterString);
+
+	public String createMultiTableQueryExpression(String primaryTableString, List<String> createTFList,
+			List<String> createTFList2, List<String> createTFList3, List<String> createTFList4,
+			List<String> createTFList5, String whereFilterString);
 }

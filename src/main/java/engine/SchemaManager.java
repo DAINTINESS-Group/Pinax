@@ -16,6 +16,8 @@ import com.opencsv.exceptions.CsvException;
 
 import model.FileColumn;
 import model.StructuredFile;
+import querymanager.QueryManagerFactory;
+import querymanager.QueryManagerInterface;
 /**
  * Schema manager is 	INDEPENDENT    of anything in the front-end package
  * You have started the wrong way with this: you started with the front-end
@@ -26,6 +28,7 @@ import model.StructuredFile;
  */
 class SchemaManager implements SchemaManagerInterface{
 	private static final String _REGISTERED_FILE_REPO = "src/main/resources/_REPO/RegisteredFiles.tsv";
+	private QueryManagerInterface qrMan = new QueryManagerFactory().createQueryManager();
 	
 	/**
 	 * The list of files that are already registered in the _REPO + those who are to be added.
@@ -282,6 +285,30 @@ class SchemaManager implements SchemaManagerInterface{
 			delimiter = " ";
 		}
 		return delimiter;
+	}
+	
+	public String createNaiveQueryExpression(String table) {
+		return qrMan.createNaiveQueryExpression(table);
+	}
+	
+	public String createProjectionOnlyQueryExpression(String table, List<String> attributeNames) {
+		return qrMan.createProjectionOnlyQueryExpression(table, attributeNames);
+
+	}
+	
+	public String createProjectSelectSingleTableQueryExpression(String table, String tableAlias, List<String> attributeNames, String filters) {
+		return qrMan.createProjectSelectSingleTableQueryExpression(table, tableAlias, attributeNames, filters);
+	}
+	
+	public String createMultiTableQueryExpression(
+			String primaryTable,
+			List<String> joinTables,
+			List<String> tableAliases,
+			List<String> attributeNames,
+			List<String> joinFilters,
+			List<String> joinTypes,
+			String whereFilter) {
+				return qrMan.createMultiTableQueryExpression(primaryTable, joinTables,tableAliases, attributeNames, joinFilters, joinTypes, whereFilter);
 	}
 	
 }//end class

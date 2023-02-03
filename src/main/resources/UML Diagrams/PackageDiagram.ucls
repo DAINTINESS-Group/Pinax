@@ -3,35 +3,35 @@
   realizations="true" associations="true" dependencies="true" nesting-relationships="true" router="FAN">  
   <package id="1" language="java" name="app.simpleClient" project="Pinax" file="/Pinax/src/main/java/app/simpleClient" 
     binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="442" y="113"/>    
+    <position height="50" width="118" x="219" y="71"/>    
     <display autosize="true" stereotype="true" sort-features="false" accessors="true"/>  
   </package>  
-  <package id="2" language="java" name="model" project="Pinax" file="/Pinax/src/main/java/model" binary="false" 
+  <package id="2" language="java" name="engine" project="Pinax" file="/Pinax/src/main/java/engine" binary="false" 
     corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="691" y="250"/>    
+    <position height="-1" width="-1" x="281" y="212"/>    
     <display autosize="true" stereotype="true" sort-features="false" accessors="true"/>  
   </package>  
-  <package id="3" language="java" name="querymanager" project="Pinax" file="/Pinax/src/main/java/querymanager" 
+  <package id="3" language="java" name="model" project="Pinax" file="/Pinax/src/main/java/model" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="50" width="101" x="509" y="190"/>    
+    <display autosize="true" stereotype="true" sort-features="false" accessors="true"/>  
+  </package>  
+  <package id="4" language="java" name="querymanager" project="Pinax" file="/Pinax/src/main/java/querymanager" 
     binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="447" y="468"/>    
-    <display autosize="true" stereotype="true" sort-features="false" accessors="true"/>  
-  </package>  
-  <package id="4" language="java" name="engine" project="Pinax" file="/Pinax/src/main/java/engine" binary="false" 
-    corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="482" y="246"/>    
+    <position height="-1" width="-1" x="282" y="348"/>    
     <display autosize="true" stereotype="true" sort-features="false" accessors="true"/>  
   </package>  
   <dependency id="5">    
-    <end type="SOURCE" refId="4"/>    
-    <end type="TARGET" refId="2"/>  
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="4"/>  
   </dependency>  
   <dependency id="6">    
     <end type="SOURCE" refId="1"/>    
     <end type="TARGET" refId="2"/>  
   </dependency>  
   <dependency id="7">    
-    <end type="SOURCE" refId="1"/>    
-    <end type="TARGET" refId="4"/>  
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="3"/>  
   </dependency>  
   <dependency id="8">    
     <end type="SOURCE" refId="1"/>    

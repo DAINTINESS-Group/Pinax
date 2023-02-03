@@ -8,8 +8,8 @@ import java.util.stream.Collectors;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 
-import querymanager.QueryManagerFactory;
-import querymanager.QueryManagerInterface;
+import engine.SchemaManagerFactory;
+import engine.SchemaManagerInterface;
 
 public class SimpleClientApp {
 	
@@ -27,17 +27,17 @@ public class SimpleClientApp {
 	}
 	
 	public void queryRunner() throws IOException {
-		QueryManagerInterface qrMan = new QueryManagerFactory().createQueryManager();
+		SchemaManagerInterface schMan = new SchemaManagerFactory().createSchemaManager();
 		Dataset<Row> results = null;
 		if(pickProperQueryConstructor() == 1) {
 			String primaryTableString = mainw.getPrimaryTableTextField().getText();
-			String naiveQueryExpression = qrMan.createNaiveQueryExpression(primaryTableString);
+			String naiveQueryExpression = schMan.createNaiveQueryExpression(primaryTableString);
 			results = mainw.getSparkSession().sql(naiveQueryExpression);
 		}
 		else if(pickProperQueryConstructor() == 2) {
 			String primaryTableString = mainw.getPrimaryTableTextField().getText();
 			String attributesString = mainw.getAttributeNamesTextField().getText();
-			String projectionOnlyQueryExpression = qrMan.createProjectionOnlyQueryExpression(primaryTableString,createTFList(attributesString));
+			String projectionOnlyQueryExpression = schMan.createProjectionOnlyQueryExpression(primaryTableString,createTFList(attributesString));
 			results = mainw.getSparkSession().sql(projectionOnlyQueryExpression);
 		}
 		else if(pickProperQueryConstructor() == 3) {
@@ -46,7 +46,7 @@ public class SimpleClientApp {
 			String tableAliasString = mainw.getTableAliasesTextField().getText();
 			String whereFilterString = mainw.getWhereFilterTextField().getText();
 			String projectSelectSingleTableQueryExpression = 
-					qrMan.createProjectSelectSingleTableQueryExpression(
+					schMan.createProjectSelectSingleTableQueryExpression(
 							primaryTableString,
 							tableAliasString,
 							createTFList(attributesString),
@@ -63,7 +63,7 @@ public class SimpleClientApp {
 			String joinTablesString = mainw.getJoinTablesTextField().getText();
 			String joinTypesString = mainw.getJoinTypesTextField().getText();
 			String multiTableQueryExpression = 
-					qrMan.createMultiTableQueryExpression(
+					schMan.createMultiTableQueryExpression(
 							primaryTableString,
 							createTFList(joinTablesString),
 							createTFList(tableAliasString),
