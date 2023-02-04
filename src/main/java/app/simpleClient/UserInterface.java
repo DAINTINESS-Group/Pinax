@@ -1,6 +1,7 @@
 package app.simpleClient;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
@@ -171,10 +172,14 @@ public class UserInterface {
 		frame.setJMenuBar(menuBar);
 		
 		JButton openItem = new JButton("Add Files");
-		openItem.addActionListener(new ActionListener() { 
+		openItem.addActionListener(new ActionListener() {
 		    public void actionPerformed(ActionEvent e) {
+		    	long start = System.currentTimeMillis();
 		    	FileSelector selector = new FileSelector();
 				selector.actionPerformed(e);
+				long end = System.currentTimeMillis();
+				float sec = (end - start) / 1000F; System.out.println(sec + " seconds");
+				System.out.println(sec);
 		    }
 		});
 		menuBar.add(openItem);
@@ -187,6 +192,23 @@ public class UserInterface {
 		    }
 		});
 		menuBar.add(helpItem);
+		
+		JButton wipeItem = new JButton("Wipe Data");
+		wipeItem.addActionListener(new ActionListener() {
+		    public void actionPerformed(ActionEvent e) {
+		    	int confirmed = JOptionPane.showConfirmDialog(null,"Are you sure you want to wipe all the registered data", "Wipe Data Message",JOptionPane.YES_NO_OPTION);
+	        	if (confirmed == JOptionPane.YES_OPTION) {
+	        		try {
+						wipeMethod();
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+	        	}
+		    }
+		});
+		menuBar.add(wipeItem);
+		
 		
 		JSplitPane splitPane = new JSplitPane();
 		frame.getContentPane().add(splitPane, BorderLayout.CENTER);
@@ -281,7 +303,6 @@ public class UserInterface {
 		    		SimpleClientApp client = new SimpleClientApp();
 		    		client.queryRunner();
 				} catch (IOException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 		    }
@@ -311,7 +332,6 @@ public class UserInterface {
 				createJTables(sf.getSfAlias(),df);
 			} catch (AnalysisException e) {
 				e.printStackTrace();
-				System.out.println("df exists already");
 			}
 		}
 	}
@@ -320,7 +340,7 @@ public class UserInterface {
 		ArrayList<String[]> dataOfFile = new ArrayList<String[]>();
 		String nameOfTable[] = {fileAlias,"Type"};
 		for(Tuple2<String, String> element : df.dtypes()) {
-			String[] s = {element._1,element._2.substring(0,element._2.length()-4)};
+			String[] s = {element._1, element._2.substring(0, element._2.length()-4)};
 			dataOfFile.add(s);
 		}
 		String tableData[][] = new String[dataOfFile.size()][];
@@ -337,10 +357,23 @@ public class UserInterface {
 		panel.add(sp);
 		mainw.getLeftPanel().add(panel);
 		SwingUtilities.updateComponentTreeUI(mainw.getFrame());
-		/*Component[] components = mainw.getLeftPanel().getComponents();
-
+	}
+	
+	private void wipeMethod() throws IOException {
+		SchemaManagerInterface schMan = new SchemaManagerFactory().createSchemaManager();
+		List<StructuredFile> fileList = schMan.getFileList();
+		for(StructuredFile sf: fileList) {
+			System.out.println(sf.getSfAlias());
+			spark.catalog().dropGlobalTempView(sf.getSfAlias());
+			spark.catalog().dropTempView(sf.getSfAlias());
+		}
+		schMan.wipeFileList();
+		schMan.wipeRepoFile();
+		SwingUtilities.updateComponentTreeUI(mainw.getFrame());
+		Component[] components = mainw.getLeftPanel().getComponents();
         for (Component component : components) {
-            System.out.println(component);
-        }*/
+        	mainw.getLeftPanel().remove(component);
+        }
+		SwingUtilities.updateComponentTreeUI(mainw.getFrame());
 	}
 }
