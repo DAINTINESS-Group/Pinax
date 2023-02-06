@@ -159,7 +159,7 @@ public class UserInterface {
 						e1.printStackTrace();
 					}
 	        		spark.stop();
-	        		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+	        		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	        	}
 	        	else {
 	        		frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
@@ -178,8 +178,8 @@ public class UserInterface {
 		    	FileSelector selector = new FileSelector();
 				selector.actionPerformed(e);
 				long end = System.currentTimeMillis();
-				float sec = (end - start) / 1000F; System.out.println(sec + " seconds");
-				System.out.println(sec);
+				float sec = (end - start) / 1000F; 
+				System.out.println(sec + " seconds");
 		    }
 		});
 		menuBar.add(openItem);
@@ -300,8 +300,12 @@ public class UserInterface {
 		queryRunner.addActionListener(new ActionListener() { 
 		    public void actionPerformed(ActionEvent e) {
 		    	try {
+			    	long start = System.currentTimeMillis();
 		    		SimpleClientApp client = new SimpleClientApp();
 		    		client.queryRunner();
+					long end = System.currentTimeMillis();
+					float sec = (end - start) / 1000F; 
+					System.out.println(sec + " seconds");
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}
@@ -363,9 +367,7 @@ public class UserInterface {
 		SchemaManagerInterface schMan = new SchemaManagerFactory().createSchemaManager();
 		List<StructuredFile> fileList = schMan.getFileList();
 		for(StructuredFile sf: fileList) {
-			System.out.println(sf.getSfAlias());
 			spark.catalog().dropGlobalTempView(sf.getSfAlias());
-			spark.catalog().dropTempView(sf.getSfAlias());
 		}
 		schMan.wipeFileList();
 		schMan.wipeRepoFile();

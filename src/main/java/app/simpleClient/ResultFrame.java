@@ -4,6 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -40,6 +42,12 @@ public class ResultFrame extends JFrame {
 	 */
 	public ResultFrame() {
 		setTitle("Results");
+		addWindowListener(new WindowAdapter() {
+	        public void windowClosing(WindowEvent e) {
+        		mainw.getSparkSession().catalog().clearCache();
+        		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+	        }
+	    });
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 400, 500);
 		contentPane = new JPanel();
