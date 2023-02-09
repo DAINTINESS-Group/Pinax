@@ -33,7 +33,6 @@ public class ResultFrame extends JFrame {
 
 	private JPanel contentPane;
 	private JScrollPane scrollPane;
-	private UserInterface mainw = UserInterface.getSingletonView();
 	private JTextField fileName;
 	Dataset<Row> results = null;
 
@@ -42,12 +41,6 @@ public class ResultFrame extends JFrame {
 	 */
 	public ResultFrame() {
 		setTitle("Results");
-		addWindowListener(new WindowAdapter() {
-	        public void windowClosing(WindowEvent e) {
-        		mainw.getSparkSession().catalog().clearCache();
-        		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-	        }
-	    });
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 400, 500);
 		contentPane = new JPanel();
