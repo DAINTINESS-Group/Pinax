@@ -43,6 +43,7 @@ public class CustomQueryFrame extends JFrame {
 		runButton.addActionListener(new ActionListener() {
 		    public void actionPerformed(ActionEvent e) {
 		    	if(textArea.getText() != null && !textArea.getText().trim().isEmpty()) {
+		    		long start = System.currentTimeMillis();
 		    		try {
 			    		SimpleClientApp client = new SimpleClientApp();
 				    	client.runCustomQuery(textArea.getText());
@@ -50,6 +51,9 @@ public class CustomQueryFrame extends JFrame {
 		    		catch (Exception m) {
 		    			JOptionPane.showMessageDialog(contentPane, "Something went wrong. Check the query for errors.");
 		    		}
+		        	long end = System.currentTimeMillis();
+		    		float sec = (end - start) / 1000F; 
+		    		System.out.println(sec + " seconds");
 		    	}
 		    	else {
 		    		JOptionPane.showMessageDialog(contentPane, "Query is empty. Please type a query.");
