@@ -361,6 +361,7 @@ public class UserInterface {
 		panel.add(sp);
 		mainw.getLeftPanel().add(panel);
 		SwingUtilities.updateComponentTreeUI(mainw.getFrame());
+		dataOfFile.clear();
 	}
 	
 	private void wipeMethod() throws IOException {

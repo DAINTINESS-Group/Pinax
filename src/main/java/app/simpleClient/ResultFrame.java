@@ -84,6 +84,8 @@ public class ResultFrame extends JFrame {
 		Dimension d = jt.getPreferredSize();
 		jt.setPreferredScrollableViewportSize(d);
 		contentPane.add(scrollPane);
+		namesOfColumns.clear();
+		dataOfFile.clear();
 	}
 	
 	public String[] exportArrayFromList(ArrayList<String[]> lst)  
