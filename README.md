@@ -23,3 +23,7 @@ The project uses a Maven wrapper so there is no need to install it to your syste
 variable pointing to your [**Java 8**](https://www.oracle.com/java/technologies/downloads/archive/) installation and SPARK_HOME
 enviromental variable pointing to your [**Spark**](https://spark.apache.org/downloads.html) installation
 folder.
+
+#### <div>Video Tutorial</div>
+
+A video tutorial of the tool can be found [**here**](https://www.youtube.com/watch?v=yMy2bhLZ8lY&ab_channel=PanosVassiliadis)
