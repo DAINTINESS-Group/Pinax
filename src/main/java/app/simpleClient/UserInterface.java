@@ -2,12 +2,14 @@ package app.simpleClient;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -187,8 +189,18 @@ public class UserInterface {
 		JButton helpItem = new JButton("Help");
 		helpItem.addActionListener(new ActionListener() { 
 		    public void actionPerformed(ActionEvent e) {
-		    	HelpFrame helper = new HelpFrame();
-		    	helper.setVisible(true);
+		    	if (Desktop.isDesktopSupported()) {
+		    		try {
+		    			File myFile = new File("src/main/resources/Instruction_Manual/PinaxInstructionManual.pdf");
+		    			Desktop.getDesktop().open(myFile);
+		    		} catch (IOException ex) {
+		    			System.out.println("no application registered for PDFs");
+		    		}
+		    	}
+		    	else {
+		    		HelpFrame helper = new HelpFrame();
+			    	helper.setVisible(true);
+		    	}
 		    }
 		});
 		menuBar.add(helpItem);
