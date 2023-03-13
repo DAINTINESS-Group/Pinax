@@ -4,7 +4,7 @@
 
 A structured file is a kind of text file, with lines, where each line is a record, the fields of which are separated by a
 separator (eg. tabs, comma, pipe, etc). After registering a data set, the system creates a table that shows the names of 
-the file's columns and their type, making it easier for the user to construct and sql query.
+the file's columns and their type, making it easier for the user to construct a sql query.
 
 ### <div align="center">Setup</div>
 
